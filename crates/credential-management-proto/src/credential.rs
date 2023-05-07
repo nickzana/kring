@@ -74,7 +74,7 @@ pub trait Container {
         origin: &str,
         options: &Self::RequestOptions,
         same_origin_with_ancestors: bool,
-    ) -> Result<std::collections::HashSet<Self::Credential>, discovery::Error>;
+    ) -> Result<std::collections::BTreeSet<Self::Credential>, discovery::Error>;
 }
 
 // TODO: More types of errors here

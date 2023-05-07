@@ -1,6 +1,6 @@
 use crate::attestation;
 use fido_common::extension;
-use std::collections::HashMap;
+use std::collections::{BTreeMap};
 
 pub mod assertion;
 pub mod bio_enrollment;
@@ -31,5 +31,5 @@ pub struct Data {
     pub user_is_verified: bool,
     pub signature_counter: u32,
     pub attested_credential_data: Option<attestation::CredentialData>,
-    pub extensions: Option<HashMap<extension::Identifier, Vec<u8>>>,
+    pub extensions: Option<BTreeMap<extension::Identifier, Vec<u8>>>,
 }

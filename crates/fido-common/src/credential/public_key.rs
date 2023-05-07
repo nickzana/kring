@@ -1,7 +1,7 @@
 use crate::registry::algorithms;
 use crate::{credential, Transport};
 use bounded_vec::BoundedVec;
-use std::collections::HashSet;
+use std::collections::{BTreeSet};
 
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
@@ -39,7 +39,7 @@ pub struct Descriptor {
     /// > This... member contains a hint as to how the client might
     /// > communicate with the managing authenticator of the public
     /// > key credential the caller is referring to.
-    pub transports: Option<HashSet<Transport>>,
+    pub transports: Option<BTreeSet<Transport>>,
 }
 
 /// > This `PublicKeyCredentialUserEntity` data structure describes the user

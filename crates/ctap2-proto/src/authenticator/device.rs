@@ -2,9 +2,9 @@ use crate::authenticator::client_pin::AuthProtocolVersion;
 use bounded_vec::BoundedVec;
 use fido_common::credential::public_key;
 use fido_common::{registry, Transport};
+use std::collections::{BTreeSet, BTreeMap};
 use std::usize;
 use std::{
-    collections::{HashMap, HashSet},
     num::NonZeroUsize,
 };
 
@@ -23,7 +23,7 @@ impl Aaguid {
     }
 }
 
-#[derive(Debug, Hash, PartialEq, Eq, Clone, Copy)]
+#[derive(Debug, Hash, PartialEq, Eq, Clone, Copy, PartialOrd, Ord)]
 pub enum Version {
     Fido2_1,
     Fido2_0,
@@ -108,7 +108,7 @@ pub enum FidoLevel {
 }
 
 /// These options describe properties of a CTAP device.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum OptionId {
     /// > Indicates that the device is attached to the client and therefore
     /// > can’t be removed and used on another client.
@@ -190,13 +190,13 @@ pub enum OptionId {
 /// > information to tailor their command parameters choices.
 pub struct Info {
     /// > List of supported CTAP versions.
-    pub versions: HashSet<Version>,
+    pub versions: BTreeSet<Version>,
     /// > List of supported extensions.
-    pub extensions: Option<HashSet<fido_common::extension::Identifier>>,
+    pub extensions: Option<BTreeSet<fido_common::extension::Identifier>>,
     /// > The claimed AAGUID.
     pub aaguid: Aaguid,
     /// > List of supported options.
-    pub options: Option<HashMap<OptionId, bool>>,
+    pub options: Option<BTreeMap<OptionId, bool>>,
     /// > Maximum message size supported by the authenticator.
     pub max_message_size: Option<usize>,
     /// > List of supported PIN/UV auth protocols in order of decreasing
@@ -208,7 +208,7 @@ pub struct Info {
     /// > Maximum Credential ID Length supported by the authenticator.
     pub max_credential_id_length: Option<NonZeroUsize>,
     /// > List of supported transports.
-    pub transports: Option<HashSet<Transport>>,
+    pub transports: Option<BTreeSet<Transport>>,
     /// > List of supported algorithms for credential generation... The array is
     /// > ordered from most preferred to least preferred and MUST NOT include
     /// > duplicate entries...
@@ -255,9 +255,9 @@ pub struct Info {
     /// > to help the platform construct user dialogs. If `clientPin`
     /// > is supported it MUST NOT be included in the bit-flags, as `clientPIN`
     /// > is not a built-in user verification method.
-    pub uv_modality: Option<HashSet<registry::UserVerify>>,
+    pub uv_modality: Option<BTreeSet<registry::UserVerify>>,
     /// > This specifies a list of authenticator certifications.
-    pub certifications: Option<HashSet<Certification>>,
+    pub certifications: Option<BTreeSet<Certification>>,
     /// > If this member is present it indicates the estimated number of
     /// > additional discoverable credentials that can be stored. If this value
     /// > is zero then platforms SHOULD create non-discoverable credentials if
@@ -279,5 +279,5 @@ pub struct Info {
     /// > `vendorPrototype` subcommand, and its value is a list of
     /// > `authenticatorConfig` `vendorCommandId` values supported, which MAY be
     /// > empty.
-    pub vendor_prototype_config_commands: Option<HashSet<usize>>,
+    pub vendor_prototype_config_commands: Option<BTreeSet<usize>>,
 }

@@ -1,6 +1,6 @@
 use crate::authenticator::{self, client_pin, Sha256Hash};
 use fido_common::{credential::public_key, extension};
-use std::collections::HashMap;
+use std::collections::{HashMap, BTreeMap};
 
 pub enum Error {
     OperationDenied,
@@ -21,7 +21,7 @@ pub enum Error {
 
 /// > The following option keys are defined for use in
 /// > `authenticatorMakeCredential`'s `options` parameter.
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum OptionKey {
     /// > Specifies whether this credential is to be discoverable or
     /// > not.
@@ -51,7 +51,8 @@ pub struct Request<'a> {
     /// > List of supported algorithms for credential generation, as
     /// > specified in [WebAuthn]. The array is ordered from most preferred
     /// > to least preferred and MUST NOT include duplicate entries.
-    pub public_key_credential_params: &'a [public_key::Parameters],
+    pub public_key_credential_params: &'a [public_key::Parameters], // TODO: BTreeSet? BTreeMap
+                                                                    // with preference as key?
     /// > An array of PublicKeyCredentialDescriptor structures, as specified
     /// > in [WebAuthn]. The authenticator returns an error if the
     /// > authenticator already contains one of the credentials enumerated
@@ -61,7 +62,7 @@ pub struct Request<'a> {
     /// > Parameters to influence authenticator operation, as specified in
     /// > [WebAuthn]. These parameters might be authenticator specific.
     pub extensions: Option<&'a HashMap<extension::Identifier, Vec<u8>>>,
-    pub options: Option<&'a HashMap<OptionKey, bool>>,
+    pub options: Option<&'a BTreeMap<OptionKey, bool>>,
     pub pin_uv_auth_param: &'a [u8],
     /// > PIN/UV protocol version selected by platform.
     pub pin_uv_auth_protocol_version: Option<client_pin::AuthProtocolVersion>,
@@ -93,5 +94,5 @@ pub struct Response {
     pub large_blob_key: Option<Vec<u8>>,
     /// > A map, keyed by extension identifiers, to unsigned outputs of
     /// > extensions, if any.
-    pub unsigned_extension_outputs: Option<HashMap<extension::Identifier, Vec<u8>>>,
+    pub unsigned_extension_outputs: Option<BTreeMap<extension::Identifier, Vec<u8>>>,
 }

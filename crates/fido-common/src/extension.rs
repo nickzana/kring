@@ -18,6 +18,7 @@
 /// > Extensions that may exist in multiple versions should take care to include
 /// > a version in their identifier. In effect, different versions are thus
 /// > treated as different extensions, e.g., `myCompany_extension_01`
+#[derive(PartialEq, Eq, PartialOrd, Ord)]
 pub enum Identifier {
     AppId,
     TransactionAuthSimple,

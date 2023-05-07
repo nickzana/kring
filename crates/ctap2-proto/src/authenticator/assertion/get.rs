@@ -1,7 +1,7 @@
 use crate::authenticator::{client_pin::AuthProtocolVersion, Sha256Hash};
 use bounded_vec::BoundedVec;
 use fido_common::credential::public_key;
-use std::{collections::HashMap, usize};
+use std::{collections::{BTreeMap}, usize};
 
 pub enum Error {
     OperationDenied,
@@ -44,9 +44,9 @@ pub struct Request<'a> {
     pub allow_list: Option<&'a BoundedVec<&'a public_key::Descriptor, 1, { usize::MAX }>>,
     /// > Parameters to influence authenticator operation. These parameters
     /// > might be authenticator specific.
-    pub extensions: Option<&'a HashMap<fido_common::extension::Identifier, &'a [u8]>>,
+    pub extensions: Option<&'a BTreeMap<fido_common::extension::Identifier, &'a [u8]>>,
     /// > Parameters to influence authenticator operation.
-    pub options: Option<&'a HashMap<OptionKey, bool>>,
+    pub options: Option<&'a BTreeMap<OptionKey, bool>>,
     pub pin_uv_auth_param: Option<&'a [u8]>,
     /// > PIN/UV protocol version selected by platform.
     pub pin_uv_auth_protocol_version: Option<AuthProtocolVersion>,

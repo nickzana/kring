@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{BTreeSet};
 
 use bounded_integer::BoundedUsize;
 
@@ -44,7 +44,7 @@ pub enum Request<'a> {
     GetPinUvAuthTokenUsingUvWithPermissions {
         version: AuthProtocolVersion,
         key_agreement: &'a KeyAgreement,
-        permissions: &'a HashSet<Permission>, // TODO: Enforce non-empty hashset? HashSet1?
+        permissions: &'a BTreeSet<Permission>, // TODO: Enforce non-empty set?
         relying_party_id: Option<usize>,
     },
     GetUvRetries,
@@ -52,7 +52,7 @@ pub enum Request<'a> {
         version: AuthProtocolVersion,
         key_agreement: &'a KeyAgreement,
         pin_hash_encrypted: usize,
-        permissions: &'a HashSet<Permission>, // TODO: Enforce non-empty hashset? HashSet1?
+        permissions: &'a BTreeSet<Permission>, // TODO: Enforce non-empty set?
         relying_party_id: Option<usize>,
     },
 }

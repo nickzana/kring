@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 /// > `WebAuthn` Relying Party's best belief as to how an authenticator may be
 /// > reached. A Relying Party will typically learn of the supported transports
 /// > for a public key credential via getTransports().
-#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize), serde(untagged))]
 pub enum Transport {
     /// > Indicates the respective authenticator can be contacted over removable
