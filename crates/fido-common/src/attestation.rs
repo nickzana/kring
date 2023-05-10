@@ -1,5 +1,5 @@
 #[cfg(feature = "serde")]
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 /// > Attestation statement formats are identified by a string, called an
 /// > attestation statement format identifier, chosen by the author of the
@@ -69,4 +69,3 @@ pub enum FormatIdentifier {
     #[cfg_attr(feature = "serde", serde(rename = "none"))]
     None,
 }
-

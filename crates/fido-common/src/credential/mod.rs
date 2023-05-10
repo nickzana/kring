@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 /// > enumeration are used for versioning the Authentication
 /// > Assertion and attestation structures according to the type of
 /// > the authenticator.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[non_exhaustive]
 pub enum Type {

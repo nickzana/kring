@@ -383,7 +383,7 @@ pub mod algorithms {
     /// > Each constant has a case-sensitive string representation (in quotes),
     /// > which is used in the authoritative metadata for FIDO authenticators.
     #[repr(u16)]
-    #[derive(Debug)]
+    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
     #[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
     pub enum Signature {
         #[cfg_attr(feature = "serde", serde(rename = "secp256r1_ecdsa_sha256_raw"))]

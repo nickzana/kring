@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 /// > This dictionary is used to supply additional parameters when
 /// > creating a new credential.
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Parameters {
     /// > This member specifies the type of credential to be
@@ -57,7 +57,6 @@ pub struct UserEntity {
     // Justfication for type from WebAuthn Specs:
     // > The user handle of the user account. A user handle is an opaque byte sequence with a
     // > maximum size of 64 bytes, and is not meant to be displayed to the user.
-    // > <https://w3c.github.io/webauthn/#dom-publickeycredentialuserentity-id/>
     //
     // CTAP says that "while an empty account identifier is valid, it has known
     // interoperability hurdles in practice and platforms are RECOMMENDED to avoid sending
@@ -70,7 +69,6 @@ pub struct UserEntity {
     /// > only for display, i.e., aiding the user in determining the
     /// > difference between user accounts with similar displayNames. For
     /// > example, "alexm", "alex.mueller@example.com" or "+14255551234".
-    // TODO: Figure out the String metadata encoding per https://w3c.github.io/webauthn/#sctn-strings-langdir
     pub name: Option<String>,
     /// > A human-palatable name for the user account, intended only for
     /// > display. For example, "Alex Müller" or "田中倫". The Relying Party
@@ -89,5 +87,5 @@ pub struct RelyingPartyEntity {
     /// > it is a human-palatable identifier for the Relying Party, intended
     /// > only for display. For example, "ACME Corporation", "Wonderful
     /// > Widgets, Inc." or "ОАО Примертех".
-    pub name: String,
+    pub name: Option<String>,
 }
