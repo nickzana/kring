@@ -38,15 +38,13 @@ pub struct Request<'a> {
     /// > Hash of the serialized client data collected by the host.
     pub client_data_hash: &'a Sha256Hash,
     /// > An array of [`public_key::Descriptor`] structures, each denoting a
-    /// > credential, as specified in `WebAuthn`. A platform MUST NOT send
-    /// > an empty `allowList`—if it would be empty it MUST be omitted. If
-    /// > this parameter is present the authenticator MUST only generate an
-    /// > assertion using one of the denoted credentials.
-    // TODO: Is there an equivalent of Vec1 but for a slice?
-    pub allow_list: Option<&'a BoundedVec<public_key::Descriptor, 1, { usize::MAX }>>,
+    /// > credential, as specified in `WebAuthn`... If this parameter is present
+    /// > the authenticator MUST only generate a assertion using one of the
+    /// > denoted credentials.
+    pub allow_list: Option<&'a BoundedVec<&'a public_key::Descriptor, 1, { usize::MAX }>>,
     /// > Parameters to influence authenticator operation. These parameters
     /// > might be authenticator specific.
-    pub extensions: Option<&'a HashMap<fido_common::extension::Identifier, Vec<u8>>>,
+    pub extensions: Option<&'a HashMap<fido_common::extension::Identifier, &'a [u8]>>,
     /// > Parameters to influence authenticator operation.
     pub options: Option<&'a HashMap<OptionKey, bool>>,
     pub pin_uv_auth_param: Option<&'a [u8]>,
