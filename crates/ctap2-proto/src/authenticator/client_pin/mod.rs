@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use bounded_integer::BoundedUsize;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum AuthProtocolVersion {
     One,
     Two,
