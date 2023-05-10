@@ -1,20 +1,27 @@
-use authenticator::{
-    assertion::get,
-    bio_enrollment, client_pin, config,
-    credential::{make, management},
-    reset,
-};
+pub mod prelude {
+    pub use crate::{
+        authenticator::{
+            assertion::get,
+            bio_enrollment, client_pin, config,
+            credential::{make, management},
+            device, reset, selection,
+        },
+        Ctap2_2Authenticator,
+    };
+}
 
 pub mod attestation;
 pub mod authenticator;
 pub mod extensions;
+
+use prelude::*;
 
 /// Defines the raw CTAP operations
 pub trait Ctap2_2Authenticator {
     #[allow(clippy::missing_errors_doc)]
     /// > This method is invoked by the host to request generation of a new
     /// > credential in the authenticator.
-    fn make_credential(request: make::Request) -> Result<make::Response, make::Error>;
+    fn make_credential(&mut self, request: make::Request) -> Result<make::Response, make::Error>;
 
     #[allow(clippy::missing_errors_doc)]
     /// > This method is used by a host to request cryptographic proof of user
