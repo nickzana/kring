@@ -1,4 +1,6 @@
 use crate::attestation;
+use fido_common::extension;
+use std::collections::HashMap;
 
 pub mod assertion;
 pub mod bio_enrollment;
@@ -22,17 +24,12 @@ pub type Sha256Hash = [u8; 32];
 /// > software, connected to the client over a secure channel. In both cases,
 /// > the Relying Party receives the authenticator data in the same format, and
 /// > uses its knowledge of the authenticator to make trust decisions.
-/// >
-/// > The authenticator data has a compact but extensible encoding. This is
-/// > desired since authenticators can be devices with limited capabilities and
-/// > low power requirements, with much simpler software stacks than the client
-/// > platform.
 pub struct Data {
     /// > SHA-256 hash of the RP ID the credential is scoped to.
     pub relying_party_id_hash: Sha256Hash,
     pub user_is_present: bool,
     pub user_is_verified: bool,
     pub signature_counter: u32,
-    pub attested_credential_data: attestation::CredentialData,
-    // TODO: extensions
+    pub attested_credential_data: Option<attestation::CredentialData>,
+    pub extensions: Option<HashMap<extension::Identifier, Vec<u8>>>,
 }
