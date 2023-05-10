@@ -12,7 +12,7 @@ pub mod reset;
 pub mod selection;
 
 /// SHA 256 hash values are 32 bytes long.
-pub type Sha256Hash = [u8; 32];
+pub struct Sha256Hash(pub [u8; 32]);
 
 /// > The authenticator data structure encodes contextual bindings made by the
 /// > authenticator. These bindings are controlled by the authenticator itself,
