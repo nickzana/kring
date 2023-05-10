@@ -1,9 +1,5 @@
-use crate::{
-    attestation,
-    authenticator::{self, client_pin, Sha256Hash},
-};
-use fido_common::credential::public_key;
-use indexmap::IndexSet;
+use crate::authenticator::{self, client_pin, Sha256Hash};
+use fido_common::{credential::public_key, extension};
 use std::collections::HashMap;
 
 pub enum Error {
@@ -25,6 +21,7 @@ pub enum Error {
 
 /// > The following option keys are defined for use in
 /// > `authenticatorMakeCredential`'s `options` parameter.
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub enum OptionKey {
     /// > Specifies whether this credential is to be discoverable or
     /// > not.
@@ -51,10 +48,10 @@ pub struct Request<'a> {
     /// > ... describes the user account to which the new public key
     /// > credential will be associated at the RP.
     pub user: &'a public_key::UserEntity,
-    /// > [Set] of supported algorithms for credential generation, as
+    /// > List of supported algorithms for credential generation, as
     /// > specified in [WebAuthn]. The array is ordered from most preferred
-    /// > to least preferred...
-    pub public_key_credential_params: &'a IndexSet<public_key::Parameters>,
+    /// > to least preferred and MUST NOT include duplicate entries.
+    pub public_key_credential_params: &'a [public_key::Parameters],
     /// > An array of PublicKeyCredentialDescriptor structures, as specified
     /// > in [WebAuthn]. The authenticator returns an error if the
     /// > authenticator already contains one of the credentials enumerated
@@ -63,7 +60,7 @@ pub struct Request<'a> {
     pub exclude_list: Option<&'a [&'a public_key::Descriptor]>,
     /// > Parameters to influence authenticator operation, as specified in
     /// > [WebAuthn]. These parameters might be authenticator specific.
-    pub extensions: Option<&'a HashMap<fido_common::extension::Identifier, Vec<u8>>>,
+    pub extensions: Option<&'a HashMap<extension::Identifier, Vec<u8>>>,
     pub options: Option<&'a HashMap<OptionKey, bool>>,
     pub pin_uv_auth_param: &'a [u8],
     /// > PIN/UV protocol version selected by platform.
@@ -80,7 +77,7 @@ pub struct Request<'a> {
     /// > attestation batching may not apply to the results of this operation
     /// > and the platform is requesting an enterprise attestation that includes
     /// > uniquely identifying information.
-    pub enterprise_attestation: Option<attestation::enterprise::Kind>,
+    pub enterprise_attestation: Option<crate::attestation::enterprise::Kind>,
 }
 
 pub struct Response {
