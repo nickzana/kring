@@ -34,7 +34,7 @@ pub trait Ctap2_2Authenticator {
     /// > a list of its supported protocol versions and extensions, its AAGUID,
     /// > and other aspects of its overall capabilities. Platforms should use
     /// > this information to tailor their command parameters choices.
-    fn get_info() -> authenticator::device::Info;
+    fn get_info(&self) -> device::Info;
 
     #[allow(clippy::missing_errors_doc)]
     /// > This command exists so that plaintext PINs are not sent to the
