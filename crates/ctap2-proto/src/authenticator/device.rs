@@ -17,7 +17,13 @@ pub struct UsizeN<const N: usize>(bounded_integer::BoundedUsize<N, { usize::MAX 
 /// > different values mean they refer to different authenticator models.
 pub struct Aaguid([u8; 16]);
 
-#[derive(Hash)]
+impl Aaguid {
+    pub const fn from(bytes: [u8; 16]) -> Self {
+        Self(bytes)
+    }
+}
+
+#[derive(Debug, Hash, PartialEq, Eq, Clone, Copy)]
 pub enum Version {
     Fido2_1,
     Fido2_0,
@@ -102,6 +108,7 @@ pub enum FidoLevel {
 }
 
 /// These options describe properties of a CTAP device.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum OptionId {
     /// > Indicates that the device is attached to the client and therefore
     /// > can’t be removed and used on another client.
@@ -193,8 +200,7 @@ pub struct Info {
     /// > Maximum message size supported by the authenticator.
     pub max_message_size: Option<usize>,
     /// > List of supported PIN/UV auth protocols in order of decreasing
-    /// > authenticator preference. MUST NOT contain duplicate values nor be
-    /// > empty if present.
+    /// > authenticator preference. MUST NOT contain duplicate values...
     pub pin_uv_auth_protocols: Option<BoundedVec<AuthProtocolVersion, 1, { usize::MAX }>>,
     /// > Maximum number of credentials supported in credentialID list at a time
     /// > by the authenticator.
