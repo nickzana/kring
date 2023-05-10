@@ -91,4 +91,7 @@ pub struct Response {
     /// > Contains the `largeBlobKey` for the credential, if requested with the
     /// > `largeBlobKey` extension.
     pub large_blob_key: Option<Vec<u8>>,
+    /// > A map, keyed by extension identifiers, to unsigned outputs of
+    /// > extensions, if any.
+    pub unsigned_extension_outputs: Option<HashMap<extension::Identifier, Vec<u8>>>,
 }
