@@ -49,7 +49,9 @@ pub trait Ctap2_2Authenticator {
     /// > factory default state.
     fn reset() -> Result<(), reset::Error>;
 
-    fn bio_enrollment(request: bio_enrollment::Request, response: bio_enrollment::Response);
+    fn bio_enrollment(
+        request: bio_enrollment::Request,
+    ) -> Result<bio_enrollment::Response, bio_enrollment::Error>;
 
     #[allow(clippy::missing_errors_doc)]
     /// > This command is used by the platform to manage discoverable
