@@ -1,7 +1,4 @@
-use crate::{
-    authenticator::{client_pin, Sha256Hash},
-    extensions::cred_protect,
-};
+use crate::{authenticator::client_pin, extensions::cred_protect, Sha256Hash};
 use fido_common::credential::public_key;
 
 pub type PinUvAuthParam = [u8; 16];
@@ -93,7 +90,7 @@ pub struct Credential {
     /// A description of the public key associated with the credential.
     pub credential_id: public_key::Descriptor,
     /// The public key associated with the credential.
-    pub public_key: coset::CoseKey, // TODO: Is this the right set of parameters for cosekey?
+    pub public_key: Vec<u8>, // TODO: Replace arbitrary bytes with parsed key type
     /// Indicates the level of user verification the authenticator requires for
     /// this credential.
     pub credential_protection_policy: cred_protect::Policy,

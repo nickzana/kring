@@ -1,12 +1,12 @@
 use crate::authenticator::client_pin::AuthProtocolVersion;
+use crate::authenticator::Transport;
+use crate::extensions;
 use bounded_vec::BoundedVec;
 use fido_common::credential::public_key;
-use fido_common::{registry, Transport};
-use std::collections::{BTreeSet, BTreeMap};
+use fido_common::registry;
+use std::collections::{BTreeMap, BTreeSet};
+use std::num::NonZeroUsize;
 use std::usize;
-use std::{
-    num::NonZeroUsize,
-};
 
 /// A usize with a minimum value of N
 #[derive(PartialEq, Eq)]
@@ -15,13 +15,7 @@ pub struct UsizeN<const N: usize>(bounded_integer::BoundedUsize<N, { usize::MAX 
 /// > data type byte string and identifying the authenticator model, i.e.
 /// > identical values mean that they refer to the same authenticator model and
 /// > different values mean they refer to different authenticator models.
-pub struct Aaguid([u8; 16]);
-
-impl Aaguid {
-    pub const fn from(bytes: [u8; 16]) -> Self {
-        Self(bytes)
-    }
-}
+pub type Aaguid = [u8; 16];
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, Copy, PartialOrd, Ord)]
 pub enum Version {
@@ -192,7 +186,7 @@ pub struct Info {
     /// > List of supported CTAP versions.
     pub versions: BTreeSet<Version>,
     /// > List of supported extensions.
-    pub extensions: Option<BTreeSet<fido_common::extension::Identifier>>,
+    pub extensions: Option<BTreeSet<extensions::Identifier>>,
     /// > The claimed AAGUID.
     pub aaguid: Aaguid,
     /// > List of supported options.

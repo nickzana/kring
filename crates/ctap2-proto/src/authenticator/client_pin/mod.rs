@@ -1,4 +1,4 @@
-use std::collections::{BTreeSet};
+use std::collections::BTreeSet;
 
 use bounded_integer::BoundedUsize;
 
@@ -26,7 +26,7 @@ pub enum Request<'a> {
         version: AuthProtocolVersion,
     },
     SetPin {
-        key_agreement: &'a KeyAgreement,
+        key_agreement: &'a coset::CoseKey,
         new_pin_encrypted: &'a [u8],
         pin_uv_auth_param: &'a [u8],
     },
@@ -38,36 +38,23 @@ pub enum Request<'a> {
     },
     GetPinToken {
         version: AuthProtocolVersion,
-        key_agreement: &'a KeyAgreement,
+        key_agreement: &'a coset::CoseKey,
         pin_hash_encrypted: &'a [u8],
     },
     GetPinUvAuthTokenUsingUvWithPermissions {
         version: AuthProtocolVersion,
-        key_agreement: &'a KeyAgreement,
+        key_agreement: &'a coset::CoseKey,
         permissions: &'a BTreeSet<Permission>, // TODO: Enforce non-empty set?
         relying_party_id: Option<usize>,
     },
     GetUvRetries,
     GetPinUvAuthTokenUsingPinWithPermissions {
         version: AuthProtocolVersion,
-        key_agreement: &'a KeyAgreement,
+        key_agreement: &'a coset::CoseKey,
         pin_hash_encrypted: usize,
         permissions: &'a BTreeSet<Permission>, // TODO: Enforce non-empty set?
         relying_party_id: Option<usize>,
     },
-}
-
-/// The [`Ctap2Device::client_pin`] command enforces several restrictions on the
-/// COSE key used in a request and response. The restrictions are as follows:
-///
-/// > This COSE_Key-encoded public key MUST contain the optional "`alg`"
-/// > parameter and MUST NOT contain any other optional parameters. The "`alg`"
-/// > parameter MUST contain a `COSEAlgorithmIdentifier` value.
-// This seems like it should be an enum where each `KeyType` variant has its own
-// parameters? `coset` uses a CBOR map directly
-pub struct KeyAgreement {
-    pub kty: coset::KeyType,
-    pub alg: Option<coset::Algorithm>,
 }
 
 pub enum PinUvAuthToken {
@@ -81,10 +68,10 @@ pub enum Response {
         power_cycle_state: Option<usize>,
     },
     GetKeyAgreement {
-        key_agreement: KeyAgreement,
+        key_agreement: coset::CoseKey,
     },
     SetPin {
-        key_agreement: KeyAgreement,
+        key_agreement: coset::CoseKey,
         new_pin_encrypted: [u8; 64],
         pin_uv_auth_param: (),
     },

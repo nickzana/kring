@@ -1,5 +1,4 @@
 use fido_common::{attestation::FormatIdentifier, credential::public_key};
-
 use crate::{attestation, UserVerificationRequirement};
 
 /// > [This struct] supplies `get()` with the data it needs to generate an

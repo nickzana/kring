@@ -1,6 +1,9 @@
-use crate::authenticator::{self, client_pin, Sha256Hash};
-use fido_common::{credential::public_key, extension};
-use std::collections::{HashMap, BTreeMap};
+use crate::{
+    authenticator::{self, client_pin},
+    extensions, Sha256Hash,
+};
+use fido_common::{attestation, credential::public_key};
+use std::collections::{BTreeMap, HashMap};
 
 pub enum Error {
     OperationDenied,
@@ -52,7 +55,7 @@ pub struct Request<'a> {
     /// > specified in [WebAuthn]. The array is ordered from most preferred
     /// > to least preferred and MUST NOT include duplicate entries.
     pub public_key_credential_params: &'a [public_key::Parameters], // TODO: BTreeSet? BTreeMap
-                                                                    // with preference as key?
+    // with preference as key?
     /// > An array of PublicKeyCredentialDescriptor structures, as specified
     /// > in [WebAuthn]. The authenticator returns an error if the
     /// > authenticator already contains one of the credentials enumerated
@@ -61,7 +64,7 @@ pub struct Request<'a> {
     pub exclude_list: Option<&'a [&'a public_key::Descriptor]>,
     /// > Parameters to influence authenticator operation, as specified in
     /// > [WebAuthn]. These parameters might be authenticator specific.
-    pub extensions: Option<&'a HashMap<extension::Identifier, Vec<u8>>>,
+    pub extensions: Option<&'a HashMap<extensions::Identifier, Vec<u8>>>,
     pub options: Option<&'a BTreeMap<OptionKey, bool>>,
     pub pin_uv_auth_param: &'a [u8],
     /// > PIN/UV protocol version selected by platform.
@@ -78,7 +81,7 @@ pub struct Request<'a> {
     /// > attestation batching may not apply to the results of this operation
     /// > and the platform is requesting an enterprise attestation that includes
     /// > uniquely identifying information.
-    pub enterprise_attestation: Option<crate::attestation::enterprise::Kind>,
+    pub enterprise_attestation: Option<attestation::enterprise::Kind>,
 }
 
 pub struct Response {
@@ -94,5 +97,5 @@ pub struct Response {
     pub large_blob_key: Option<Vec<u8>>,
     /// > A map, keyed by extension identifiers, to unsigned outputs of
     /// > extensions, if any.
-    pub unsigned_extension_outputs: Option<BTreeMap<extension::Identifier, Vec<u8>>>,
+    pub unsigned_extension_outputs: Option<BTreeMap<extensions::Identifier, Vec<u8>>>,
 }

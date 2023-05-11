@@ -1,3 +1,5 @@
+pub use fido_common::extensions::*;
+
 pub mod cred_protect;
 
 /// The extension input parameters passed to the authenticator during a call to

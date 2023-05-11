@@ -8,9 +8,9 @@ pub mod prelude {
         },
         Ctap2_2Authenticator,
     };
+    pub use fido_common::Sha256Hash;
 }
 
-pub mod attestation;
 pub mod authenticator;
 pub mod extensions;
 
@@ -49,26 +49,27 @@ pub trait Ctap2_2Authenticator {
     /// > factory default state.
     fn reset() -> Result<(), reset::Error>;
 
-    fn bio_enrollment(
-        request: bio_enrollment::Request,
-    ) -> Result<bio_enrollment::Response, bio_enrollment::Error>;
+    // fn bio_enrollment(
+    // request: bio_enrollment::Request,
+    // ) -> Result<bio_enrollment::Response, bio_enrollment::Error>;
 
-    #[allow(clippy::missing_errors_doc)]
-    /// > This command is used by the platform to manage discoverable
-    /// > credentials on the authenticator.
-    fn credential_management(
-        request: management::Request,
-    ) -> Result<management::Response, management::Error>;
+    // #[allow(clippy::missing_errors_doc)]
+    // > This command is used by the platform to manage discoverable
+    // > credentials on the authenticator.
+    // fn credential_management(
+    // request: management::Request,
+    // ) -> Result<management::Response, management::Error>;
 
     #[allow(clippy::missing_errors_doc)]
     /// > This command allows the platform to let a user select a certain
     /// > authenticator by asking for user presence.
     fn selection() -> Result<(), authenticator::selection::Error>;
 
-    fn large_blobs() -> Result<(), ()>;
+    // fn large_blobs() -> Result<(), ()>;
 
-    #[allow(clippy::missing_errors_doc)]
-    /// > This command is used to configure various authenticator features
-    /// > through the use of its subcommands.
-    fn authenticator_config(request: config::Request) -> Result<(), config::Error>;
+    // #[allow(clippy::missing_errors_doc)]
+    // > This command is used to configure various authenticator features
+    // > through the use of its subcommands.
+    // fn authenticator_config(request: config::Request) -> Result<(),
+    // config::Error>;
 }

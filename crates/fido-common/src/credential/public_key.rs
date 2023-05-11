@@ -1,7 +1,7 @@
 use crate::registry::algorithms;
-use crate::{credential, Transport};
+use crate::{authenticator::Transport, credential};
 use bounded_vec::BoundedVec;
-use std::collections::{BTreeSet};
+use std::collections::BTreeSet;
 
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
