@@ -1,6 +1,9 @@
 use crate::{attestation, extensions, Sha256Hash};
 use std::collections::BTreeMap;
 
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
 pub enum Flags {}
 
 /// > The authenticator data structure encodes contextual bindings made by the
@@ -13,6 +16,7 @@ pub enum Flags {}
 /// > software, connected to the client over a secure channel. In both cases,
 /// > the Relying Party receives the authenticator data in the same format, and
 /// > uses its knowledge of the authenticator to make trust decisions.
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 pub struct Data {
     /// > SHA-256 hash of the RP ID the credential is scoped to.
     pub relying_party_id_hash: Sha256Hash,
@@ -41,9 +45,6 @@ impl TryFrom<&[u8]> for Data {
         Self::try_from(value).ok_or(())
     }
 }
-
-#[cfg(feature = "serde")]
-use serde::{Deserialize, Serialize};
 
 /// > Authenticators may implement various transports for communicating with
 /// > clients. This enumeration defines hints as to how clients might

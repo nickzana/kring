@@ -7,8 +7,9 @@ edition = "2021"
 
 [dependencies]
 bounded-vec = { version = "0.7.1", features = ["serde"] }
+ciborium = { version = "0.2.1", default-features = false, optional = true }
 coset = { version = "0.3.4", default-features = false }
 serde = { version = "1", features = ["derive"], optional = true }
 
 [features]
-serde = ["dep:serde", "bounded-vec/serde"]
+serde = ["dep:serde", "bounded-vec/serde", "dep:ciborium"]

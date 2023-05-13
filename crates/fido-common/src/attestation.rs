@@ -1,3 +1,4 @@
+use serde::ser::Serializer;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
@@ -71,8 +72,12 @@ pub enum FormatIdentifier {
 }
 
 pub mod enterprise {
+    #[cfg(feature = "serde")]
+    use serde::{Deserialize, Serialize};
+
     #[repr(usize)]
     #[derive(Clone, Copy)]
+    #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
     pub enum Kind {
         /// > In this case, an enterprise attestation capable authenticator, on
         /// > which enterprise attestation is enabled, upon receiving the
@@ -97,14 +102,41 @@ pub mod enterprise {
     }
 }
 
+use coset::CborSerializable;
 /// > Attested credential data is a variable-length byte array added to the
 /// > authenticator data when generating an attestation object for a given
 /// > credential.
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 pub struct CredentialData {
     /// > The AAGUID of the authenticator.
     pub aaguid: [u8; 16],
     /// The ID of the credential.
     pub id: Vec<u8>,
     /// The public key of the credential.
+    #[cfg_attr(
+        feature = "serde",
+        serde(
+            deserialize_with = "deserialize_coset_key",
+            serialize_with = "serialize_cose_key"
+        )
+    )]
     pub public_key: coset::CoseKey,
+}
+
+pub fn serialize_cose_key<S: Serializer>(key: &coset::CoseKey, s: S) -> Result<S::Ok, S::Error> {
+    use serde::ser::Error;
+    let bytes = key
+        .clone()
+        .to_vec()
+        .map_err(|e| Error::custom(e.to_string()))?;
+
+    s.serialize_bytes(&bytes)
+}
+
+#[cfg(feature = "serde")]
+fn deserialize_coset_key<'de, D>(deserializer: D) -> Result<coset::CoseKey, D::Error>
+where
+    D: serde::de::Deserializer<'de>,
+{
+    todo!()
 }

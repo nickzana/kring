@@ -5,6 +5,9 @@ use crate::{
 use fido_common::{attestation, credential::public_key};
 use std::collections::{BTreeMap, HashMap};
 
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
 pub enum Error {
     OperationDenied,
     PinNotSet,
@@ -25,6 +28,7 @@ pub enum Error {
 /// > The following option keys are defined for use in
 /// > `authenticatorMakeCredential`'s `options` parameter.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum OptionKey {
     /// > Specifies whether this credential is to be discoverable or
     /// > not.
@@ -41,6 +45,7 @@ pub enum OptionKey {
 
 /// Input parameters for [`Ctap2Device::make_credential`] operation.
 #[derive(Clone, Copy)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct Request<'a> {
     /// > Hash of the ClientData contextual binding specified by host.
     pub client_data_hash: &'a Sha256Hash,
@@ -84,6 +89,7 @@ pub struct Request<'a> {
     pub enterprise_attestation: Option<attestation::enterprise::Kind>,
 }
 
+#[cfg_attr(feature = "serde", derive(Deserialize))]
 pub struct Response {
     pub format: fido_common::attestation::FormatIdentifier,
     pub authenticator_data: authenticator::Data,

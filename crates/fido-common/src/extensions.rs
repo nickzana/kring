@@ -1,3 +1,6 @@
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
 /// > Extensions are identified by a string, called an extension identifier,
 /// > chosen by the extension author.
 /// >
@@ -18,7 +21,8 @@
 /// > Extensions that may exist in multiple versions should take care to include
 /// > a version in their identifier. In effect, different versions are thus
 /// > treated as different extensions, e.g., `myCompany_extension_01`
-#[derive(PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum Identifier {
     AppId,
     TransactionAuthSimple,
