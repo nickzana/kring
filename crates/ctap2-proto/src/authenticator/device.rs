@@ -8,7 +8,7 @@ use std::num::NonZeroUsize;
 use std::usize;
 
 /// A usize with a minimum value of N
-#[derive(PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct UsizeN<const N: usize>(bounded_integer::BoundedUsize<N, { usize::MAX }>);
 
 /// > data type byte string and identifying the authenticator model, i.e.
