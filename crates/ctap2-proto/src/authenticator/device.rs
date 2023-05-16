@@ -40,6 +40,8 @@ pub enum Version {
 /// > `AAGUID` via appropriate methods. Platforms may alter their behaviour
 /// > based on these hints such as selecting a PIN protocol or `credProtect`
 /// > level.
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Certification {
     /// > The [FIPS140-2] Cryptographic-Module-Validation-Program overall
     /// > certification level.
@@ -52,6 +54,8 @@ pub enum Certification {
 }
 
 #[repr(usize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum FipsCryptoValidation2Level {
     Level1 = 1,
     Level2 = 2,
@@ -60,6 +64,8 @@ pub enum FipsCryptoValidation2Level {
 }
 
 #[repr(usize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum FipsCryptoValidation3Level {
     Level1 = 1,
     Level2 = 2,
@@ -68,6 +74,8 @@ pub enum FipsCryptoValidation3Level {
 }
 
 #[repr(usize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum FipsPhysicalCryptoValidation2Level {
     Level1 = 1,
     Level2 = 2,
@@ -76,6 +84,8 @@ pub enum FipsPhysicalCryptoValidation2Level {
 }
 
 #[repr(usize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum FipsPhysicalCryptoValidation3Level {
     Level1 = 1,
     Level2 = 2,
@@ -86,6 +96,8 @@ pub enum FipsPhysicalCryptoValidation3Level {
 /// > Common Criteria Evaluation Assurance Level [CC1V3-1R5]. This is a integer
 /// > from 1 to 7. The intermediate-plus levels are not represented.
 #[repr(usize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum CommonCriterialLevel {
     EAL1 = 1,
     EAL2 = 2,
@@ -100,6 +112,8 @@ pub enum CommonCriterialLevel {
 /// > numbered levels are mapped to the odd numbers, with the plus levels mapped
 /// > to the even numbers e.g., level 3+ is mapped to 6.
 #[repr(usize)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum FidoLevel {
     L1 = 1,
     L1Plus = 2,
