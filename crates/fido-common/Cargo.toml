@@ -9,6 +9,7 @@ edition = "2021"
 ciborium = { version = "0.2.1", default-features = false, optional = true }
 coset = { version = "0.3.4", default-features = false }
 serde = { version = "1", features = ["derive"], optional = true }
+bitflags = { version = "2.2.1", default-features = false, optional = true }
 
 [features]
-serde = ["dep:serde", "dep:ciborium"]
+serde = ["dep:serde", "dep:bitflags", "dep:ciborium"]

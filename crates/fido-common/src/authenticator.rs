@@ -5,7 +5,12 @@ use crate::{
 };
 use std::collections::BTreeMap;
 
-pub enum Flags {}
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "serde")]
+use bitflags::bitflags;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum UserPresence {
     Present,
@@ -28,6 +33,7 @@ pub enum UserVerification {
 /// > software, connected to the client over a secure channel. In both cases,
 /// > the Relying Party receives the authenticator data in the same format, and
 /// > uses its knowledge of the authenticator to make trust decisions.
+#[derive(Debug)]
 pub struct Data {
     /// > SHA-256 hash of the RP ID the credential is scoped to.
     pub relying_party_id_hash: Sha256Hash,
@@ -40,27 +46,121 @@ pub struct Data {
     pub extensions: Option<BTreeMap<extensions::Identifier, Vec<u8>>>,
 }
 
-impl Data {
-    fn try_from(value: &[u8]) -> Option<Self> {
-        // 32 bytes: RP id hash
-        let rp_id = value.get(0..32)?.as_ref();
-        //
-        let flags = value.get(32)?;
-
-        None
-    }
-}
-
-impl TryFrom<&[u8]> for Data {
-    type Error = ();
-
-    fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
-        Self::try_from(value).ok_or(())
+#[cfg(feature = "serde")]
+bitflags! {
+    #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    // > Flags (bit 0 is the least significant bit):
+    struct DataFlags: u8 {
+        // > Bit 0: User Present (UP) result.
+        // >    1 means the user is present.
+        const USER_PRESENCE = 0b1 << 0;
+        // > Bit 2: User Verified (UV) result.
+        // >    1 means the user is verified.
+        const USER_VERIFIED = 0b1 << 2;
+        // > Bit 3: Backup Eligibility (BE).
+        // >    1 means the public key credential source is backup eligible.
+        const BACKUP_ELIGIBLE = 0b1 << 3;
+        // > Bit 4: Backup State (BS).
+        // >    1 means the public key credential source is currently backed up.
+        const BACKUP_STATE = 0b1 << 4;
+        // > Bit 6: Attested credential data included (AT).
+        // >    Indicates whether the authenticator added attested credential data.
+        const ATTESTED_CREDENTIAL_DATA = 0b1 << 6;
+        // > Bit 7: Extension data included (ED).
+        // >    Indicates if the authenticator data has extensions.
+        const EXTENSION_DATA_INCLUDED = 0b1 << 7;
     }
 }
 
 #[cfg(feature = "serde")]
-use serde::{Deserialize, Serialize};
+impl DataFlags {
+    fn user_presence(&self) -> UserPresence {
+        if self.contains(DataFlags::USER_PRESENCE) {
+            UserPresence::Present
+        } else {
+            UserPresence::NotPresent
+        }
+    }
+
+    fn user_verification(&self) -> UserVerification {
+        if self.contains(DataFlags::USER_VERIFIED) {
+            UserVerification::Verified
+        } else {
+            UserVerification::NotVerified
+        }
+    }
+
+    fn backup_eligibility(&self) -> BackupEligibility {
+        if self.contains(DataFlags::BACKUP_ELIGIBLE) {
+            BackupEligibility::Eligible
+        } else {
+            BackupEligibility::Ineligible
+        }
+    }
+
+    fn backup_state(&self) -> BackupState {
+        if self.contains(DataFlags::BACKUP_STATE) {
+            BackupState::BackedUp
+        } else {
+            BackupState::NotBackedUp
+        }
+    }
+
+    fn has_attested_credential_data(&self) -> bool {
+        self.contains(DataFlags::ATTESTED_CREDENTIAL_DATA)
+    }
+}
+
+#[cfg(feature = "serde")]
+impl<'de> Deserialize<'de> for Data {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        use serde::de;
+
+        let data = Vec::<u8>::deserialize(deserializer)?;
+
+        // The authenticator data structure is a byte array of 37 bytes or more
+        if data.len() < 37 {
+            return Err(de::Error::invalid_length(data.len(), &"at least 37 bytes"));
+        }
+
+        // SAFETY: split_array_ref panics if const param is out of bounds for slice.
+        // data.len() guard protects against out of bounds indicies.
+
+        // rpIdHash: 32 Bytes
+        // > SHA-256 hash of the RP ID the credential is scoped to.
+        let (&relying_party_id_hash, data): (&Sha256Hash, _) = data.split_array_ref::<32>();
+
+        // flags: 1 Byte
+        let (&[flags], data): (&[u8; 1], _) = data.split_array_ref::<1>();
+        let flags = DataFlags::from_bits_truncate(flags);
+
+        // signCount: 4 Bytes
+        // > Signature counter, 32-bit unsigned big-endian integer.
+        let (&counter_be_bytes, data) = data.split_array_ref::<4>();
+        let signature_counter = u32::from_be_bytes(counter_be_bytes);
+
+        let attested_credential_data: Option<attestation::CredentialData> =
+            if flags.has_attested_credential_data() {
+                Some(attestation::CredentialData::try_from(data).map_err(de::Error::custom)?)
+            } else {
+                None
+            };
+
+        Ok(Self {
+            relying_party_id_hash,
+            user_presence: flags.user_presence(),
+            user_verification: flags.user_verification(),
+            backup_eligibility: flags.backup_eligibility(),
+            backup_state: flags.backup_state(),
+            signature_counter,
+            attested_credential_data,
+            extensions: None,
+        })
+    }
+}
 
 /// > Authenticators may implement various transports for communicating with
 /// > clients. This enumeration defines hints as to how clients might
