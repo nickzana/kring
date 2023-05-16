@@ -1,5 +1,5 @@
-pub mod authenticator;
 pub mod attestation;
+pub mod authenticator;
 pub mod credential;
 pub mod extensions;
 pub mod registry;
