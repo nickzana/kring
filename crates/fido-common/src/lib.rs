@@ -1,3 +1,5 @@
+#![feature(split_array, slice_take)]
+
 pub mod attestation;
 pub mod authenticator;
 pub mod credential;
