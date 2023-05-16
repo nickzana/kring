@@ -1,3 +1,6 @@
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
 /// > Extensions are identified by a string, called an extension identifier,
 /// > chosen by the extension author.
 /// >
@@ -18,22 +21,39 @@
 /// > Extensions that may exist in multiple versions should take care to include
 /// > a version in their identifier. In effect, different versions are thus
 /// > treated as different extensions, e.g., `myCompany_extension_01`
-#[derive(PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum Identifier {
+    #[cfg_attr(feature = "serde", serde(rename = "appid"))]
     AppId,
+    #[cfg_attr(feature = "serde", serde(rename = "txAuthSimple"))]
     TransactionAuthSimple,
+    #[cfg_attr(feature = "serde", serde(rename = "txAuthGeneric"))]
     TransactionAuthGeneric,
+    #[cfg_attr(feature = "serde", serde(rename = "authnSel"))]
     AuthenticationSelection,
+    #[cfg_attr(feature = "serde", serde(rename = "exts"))]
     Extensions,
+    #[cfg_attr(feature = "serde", serde(rename = "uvi"))]
     UserVerificationIndex,
+    #[cfg_attr(feature = "serde", serde(rename = "loc"))]
     Location,
+    #[cfg_attr(feature = "serde", serde(rename = "uvm"))]
     UserVerificationMethod,
+    #[cfg_attr(feature = "serde", serde(rename = "credProtect"))]
     CredentialProtection,
+    #[cfg_attr(feature = "serde", serde(rename = "credBlob"))]
     CredentialBlob,
+    #[cfg_attr(feature = "serde", serde(rename = "largeBlobKey"))]
     LargeBlobKey,
+    #[cfg_attr(feature = "serde", serde(rename = "minPinLength"))]
     MinPinLength,
+    #[cfg_attr(feature = "serde", serde(rename = "hmac-secret"))]
     HmacSecret,
+    #[cfg_attr(feature = "serde", serde(rename = "appidExclude"))]
     AppIdExclude,
+    #[cfg_attr(feature = "serde", serde(rename = "credProps"))]
     CredentialProperties,
+    #[cfg_attr(feature = "serde", serde(rename = "largeBlob"))]
     LargeBlob,
 }
