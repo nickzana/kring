@@ -16,3 +16,15 @@ pub enum Type {
     #[cfg_attr(feature = "serde", serde(rename = "public-key"))]
     PublicKey,
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BackupState {
+    BackedUp = 0b0,
+    NotBackedUp = 0b1,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BackupEligibility {
+    Eligible,
+    Ineligible,
+}
