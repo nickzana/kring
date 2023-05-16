@@ -32,18 +32,3 @@ pub struct Data<const TYPE: DataType> {
     /// > absence indicates that the client doesn’t support token binding.
     pub token_binding: Option<token::Binding>,
 }
-
-#[cfg(feature = "serde")]
-impl<const TYPE: DataType> Serialize for Data<TYPE> {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        // Keys are: "type", "challenge", "origin", "topOrigin", "crossOrigin"
-        const LEN: usize = 5;
-        let mut map = serializer.serialize_map(Some(LEN))?;
-
-        // map.serialize_entry("type", value)
-        todo!()
-    }
-}
