@@ -1,11 +1,49 @@
 use bounded_integer::BoundedUsize;
 use std::collections::BTreeSet;
 
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum AuthProtocolVersion {
     One,
     Two,
+}
+
+// workaround until <https://github.com/serde-rs/serde/pull/2056> is merged
+// PR: ( Integer/boolean tags for internally/adjacently tagged enums #2056 )
+#[cfg(feature = "serde")]
+impl Serialize for AuthProtocolVersion {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        serializer.serialize_u8(match self {
+            AuthProtocolVersion::One => 1,
+            AuthProtocolVersion::Two => 2,
+        })
+    }
+}
+
+// workaround until <https://github.com/serde-rs/serde/pull/2056> is merged
+// PR: ( Integer/boolean tags for internally/adjacently tagged enums #2056 )
+#[cfg(feature = "serde")]
+impl<'de> Deserialize<'de> for AuthProtocolVersion {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        use serde::de;
+
+        match u8::deserialize(deserializer)? {
+            1 => Ok(Self::One),
+            2 => Ok(Self::Two),
+            i => Err(de::Error::invalid_value(
+                de::Unexpected::Unsigned(i.into()),
+                &"1 or 2",
+            )),
+        }
+    }
 }
 
 pub enum Subcommand {
