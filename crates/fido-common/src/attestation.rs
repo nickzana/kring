@@ -1,5 +1,10 @@
 #[cfg(feature = "serde")]
+use crate::credential::public_key::algorithm;
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
+#[cfg(feature = "serde")]
+use serde_with::{serde_as, Bytes};
+
 pub mod enterprise;
 
 /// > Attestation statement formats are identified by a string, called an
@@ -69,6 +74,31 @@ pub enum FormatIdentifier {
     /// > attestation information.
     #[cfg_attr(feature = "serde", serde(rename = "none"))]
     None,
+}
+
+#[cfg_eval]
+#[derive(Debug)]
+#[cfg_attr(
+    feature = "serde",
+    serde_as,
+    derive(Serialize, Deserialize),
+    // TODO: Workaround until serde can use integer keys as tag, since "fmt" is CBOR key 0x01.
+    serde(untagged) 
+)]
+pub enum Statement {
+    #[cfg_attr(feature = "serde", serde(rename = "packed"))]
+    Packed {
+        #[cfg_attr(feature = "serde", serde(rename = "alg", with = "algorithm"))]
+        algorithm: coset::iana::Algorithm,
+        #[cfg_attr(feature = "serde", serde_as(as = "Bytes"), serde(rename = "sig"))]
+        signature: Vec<u8>,
+        #[cfg_attr(feature = "serde", serde_as(as = "Vec<Bytes>"), serde(rename = "x5c"))]
+        attestation_certificate_chain: Vec<Vec<u8>>, // TODO: Parse X.509 certs
+    },
+    Unregistered {
+        identifier: String,
+        data: Vec<u8>,
+    },
 }
 
 /// > Attested credential data is a variable-length byte array added to the
