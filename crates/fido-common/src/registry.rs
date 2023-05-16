@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 /// > representation (in quotes), which is used in the authoritative metadata
 /// > for FIDO authenticators.
 #[repr(u32)]
-#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum UserVerify {
     /// > This flag MUST be set if the authenticator is able to confirm user
