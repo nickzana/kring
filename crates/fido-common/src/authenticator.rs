@@ -1,4 +1,8 @@
-use crate::{attestation, extensions, Sha256Hash};
+use crate::{
+    attestation,
+    credential::{BackupEligibility, BackupState},
+    extensions, Sha256Hash,
+};
 use std::collections::BTreeMap;
 
 pub enum Flags {}
@@ -29,6 +33,8 @@ pub struct Data {
     pub relying_party_id_hash: Sha256Hash,
     pub user_presence: UserPresence,
     pub user_verification: UserVerification,
+    pub backup_eligibility: BackupEligibility,
+    pub backup_state: BackupState,
     pub signature_counter: u32,
     pub attested_credential_data: Option<attestation::CredentialData>,
     pub extensions: Option<BTreeMap<extensions::Identifier, Vec<u8>>>,
