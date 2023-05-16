@@ -7,8 +7,12 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::num::NonZeroUsize;
 use std::usize;
 
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
 /// A usize with a minimum value of N
 #[derive(Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct UsizeN<const N: usize>(bounded_integer::BoundedUsize<N, { usize::MAX }>);
 
 /// > data type byte string and identifying the authenticator model, i.e.
