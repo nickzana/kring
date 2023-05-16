@@ -21,10 +21,15 @@ pub struct UsizeN<const N: usize>(bounded_integer::BoundedUsize<N, { usize::MAX 
 pub type Aaguid = [u8; 16];
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, Copy, PartialOrd, Ord)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum Version {
+    #[cfg_attr(feature = "serde", serde(rename = "FIDO_2_1"))]
     Fido2_1,
+    #[cfg_attr(feature = "serde", serde(rename = "FIDO_2_0"))]
     Fido2_0,
+    #[cfg_attr(feature = "serde", serde(rename = "FIDO_2_1_PRE"))]
     Fido2_1Preview,
+    #[cfg_attr(feature = "serde", serde(rename = "U2F_V2"))]
     U2fV2,
 }
 
