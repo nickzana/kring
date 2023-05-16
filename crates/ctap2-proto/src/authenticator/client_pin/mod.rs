@@ -1,6 +1,6 @@
+use bounded_integer::BoundedUsize;
 use std::collections::BTreeSet;
 
-use bounded_integer::BoundedUsize;
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum AuthProtocolVersion {

@@ -8,4 +8,3 @@ pub mod credential;
 pub mod device;
 pub mod reset;
 pub mod selection;
-

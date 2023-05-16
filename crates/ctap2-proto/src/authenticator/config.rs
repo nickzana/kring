@@ -1,4 +1,4 @@
-use std::collections::{BTreeMap};
+use std::collections::BTreeMap;
 
 use super::client_pin::AuthProtocolVersion;
 
@@ -38,7 +38,7 @@ pub enum Request<'a> {
     VendorPrototype {
         vendor_command_id: usize,
         params: &'a BTreeMap<Vec<u8>, Vec<u8>>, /* TODO: Is the character space of keys
-                                                * restricted to UTF-8? */
+                                                 * restricted to UTF-8? */
         pin_uv_auth_protocol: AuthProtocolVersion,
         pin_uv_auth_param: &'a [u8], // TODO: Is using a more specific type possible?
     },

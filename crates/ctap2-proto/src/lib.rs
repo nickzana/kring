@@ -10,11 +10,10 @@ pub mod prelude {
     };
     pub use fido_common::Sha256Hash;
 }
+use prelude::*;
 
 pub mod authenticator;
 pub mod extensions;
-
-use prelude::*;
 
 /// Defines the raw CTAP operations
 pub trait Ctap2_2Authenticator {

@@ -1,5 +1,5 @@
-use crate::{authenticator::client_pin::AuthProtocolVersion, extensions};
 use crate::Sha256Hash;
+use crate::{authenticator::client_pin::AuthProtocolVersion, extensions};
 use fido_common::credential::public_key;
 use std::{collections::BTreeMap, usize};
 
