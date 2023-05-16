@@ -1,6 +1,5 @@
 use crate::{authenticator::client_pin::AuthProtocolVersion, extensions};
 use crate::Sha256Hash;
-use bounded_vec::BoundedVec;
 use fido_common::credential::public_key;
 use std::{collections::BTreeMap, usize};
 
@@ -42,7 +41,8 @@ pub struct Request<'a> {
     /// > credential, as specified in `WebAuthn`... If this parameter is present
     /// > the authenticator MUST only generate a assertion using one of the
     /// > denoted credentials.
-    pub allow_list: Option<&'a BoundedVec<&'a public_key::Descriptor, 1, { usize::MAX }>>,
+    // Cannot be empty if present
+    pub allow_list: Option<&'a Vec<&'a public_key::Descriptor>>,
     /// > Parameters to influence authenticator operation. These parameters
     /// > might be authenticator specific.
     pub extensions: Option<&'a BTreeMap<extensions::Identifier, &'a [u8]>>,

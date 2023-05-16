@@ -1,7 +1,6 @@
 use crate::authenticator::client_pin::AuthProtocolVersion;
 use crate::authenticator::Transport;
 use crate::extensions;
-use bounded_vec::BoundedVec;
 use fido_common::credential::public_key;
 use fido_common::registry;
 use std::collections::{BTreeMap, BTreeSet};
@@ -195,7 +194,8 @@ pub struct Info {
     pub max_message_size: Option<usize>,
     /// > List of supported PIN/UV auth protocols in order of decreasing
     /// > authenticator preference. MUST NOT contain duplicate values...
-    pub pin_uv_auth_protocols: Option<BoundedVec<AuthProtocolVersion, 1, { usize::MAX }>>,
+    // Cannot be empty if present
+    pub pin_uv_auth_protocols: Option<Vec<AuthProtocolVersion>>,
     /// > Maximum number of credentials supported in credentialID list at a time
     /// > by the authenticator.
     pub max_credential_count_in_list: Option<NonZeroUsize>,
@@ -206,7 +206,8 @@ pub struct Info {
     /// > List of supported algorithms for credential generation... The array is
     /// > ordered from most preferred to least preferred and MUST NOT include
     /// > duplicate entries...
-    pub algorithms: Option<BoundedVec<public_key::Parameters, 1, { usize::MAX }>>,
+    // Cannot be empty if present
+    pub algorithms: Option<Vec<public_key::Parameters>>,
     /// > The maximum size, in bytes, of the serialized large-blob array that
     /// > this authenticator can store. If the `authenticatorLargeBlobs` command
     /// > is supported, this MUST be specified. Otherwise it MUST NOT be.
