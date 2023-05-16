@@ -3,6 +3,8 @@ use std::collections::BTreeSet;
 
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
+#[cfg(feature = "serde")]
+use serde_with::{serde_as, skip_serializing_none, Bytes};
 
 #[cfg(feature = "serde")]
 pub(crate) mod algorithm {
@@ -48,8 +50,14 @@ pub struct Parameters {
 }
 
 /// > This dictionary identifies a specific public key credential.
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Debug)]
+#[cfg_eval]
+#[derive(Debug, Clone)]
+#[cfg_attr(
+    feature = "serde",
+    serde_as,
+    skip_serializing_none,
+    derive(Serialize, Deserialize)
+)]
 pub struct Descriptor {
     /// > This member contains the type of the public key credential
     /// > the caller is referring to.
@@ -58,6 +66,8 @@ pub struct Descriptor {
     /// > A probabilistically-unique byte sequence identifying a
     /// > public key credential source and its authentication
     /// > assertions.
+    // Bounds: [16, 1023] bytes
+    #[cfg_attr(feature = "serde", serde_as(as = "Bytes"))]
     pub id: Vec<u8>,
     /// > This... member contains a hint as to how the client might
     /// > communicate with the managing authenticator of the public

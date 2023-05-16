@@ -1,4 +1,4 @@
-#![feature(split_array, slice_take)]
+#![feature(cfg_eval, split_array, slice_take)]
 
 pub mod attestation;
 pub mod authenticator;
