@@ -6,7 +6,7 @@ pub mod prelude {
             credential::{make, management},
             device, reset, selection,
         },
-        Ctap2_2Authenticator,
+        Command, Ctap2_2Authenticator,
     };
     pub use fido_common::Sha256Hash;
 }
@@ -72,4 +72,21 @@ pub trait Ctap2_2Authenticator {
     // > through the use of its subcommands.
     // fn authenticator_config(request: config::Request) -> Result<(),
     // config::Error>;
+}
+
+#[repr(u8)]
+pub enum Command {
+    AuthenticatorMakeCredential = 0x01,
+    AuthenticatorGetAssertion = 0x02,
+    AuthenticatorGetNextAssertion = 0x08,
+    AuthenticatorGetInfo = 0x04,
+    AuthenticatorClientPin = 0x06,
+    AuthenticatorReset = 0x07,
+    AuthenticatorBioEnrollment = 0x09,
+    AuthenticatorCredentialManagement = 0x0A,
+    AuthenticatorSelection = 0x0B,
+    AuthenticatorLargeBlobs = 0x0C,
+    AuthenticatorConfig = 0x0D,
+    PrototypeAuthenticatorBioEnrollment = 0x40,
+    PrototypeAuthenticatorCredentialmanagement = 0x41,
 }
