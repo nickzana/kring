@@ -3,7 +3,7 @@ use crate::{
     extensions, Sha256Hash,
 };
 use fido_common::{attestation, credential::public_key};
-use std::collections::{BTreeMap, HashMap};
+use std::collections::BTreeMap;
 
 pub enum Error {
     OperationDenied,
@@ -64,7 +64,7 @@ pub struct Request<'a> {
     pub exclude_list: Option<&'a [&'a public_key::Descriptor]>,
     /// > Parameters to influence authenticator operation, as specified in
     /// > [WebAuthn]. These parameters might be authenticator specific.
-    pub extensions: Option<&'a HashMap<extensions::Identifier, Vec<u8>>>,
+    pub extensions: Option<&'a BTreeMap<extensions::Identifier, Vec<u8>>>,
     pub options: Option<&'a BTreeMap<OptionKey, bool>>,
     pub pin_uv_auth_param: &'a [u8],
     /// > PIN/UV protocol version selected by platform.
