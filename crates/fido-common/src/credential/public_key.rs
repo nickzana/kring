@@ -1,9 +1,33 @@
-use crate::registry::algorithms;
 use crate::{authenticator::Transport, credential};
 use std::collections::BTreeSet;
 
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "serde")]
+pub(crate) mod algorithm {
+    use coset::iana::{Algorithm, EnumI64};
+    use serde::{Deserialize, Serialize};
+
+    pub(crate) fn serialize<S>(algorithm: &Algorithm, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let i = algorithm.to_i64();
+        i64::serialize(&i, serializer)
+    }
+
+    pub(crate) fn deserialize<'de, D>(deserializer: D) -> Result<Algorithm, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let i = i64::deserialize(deserializer)?;
+        coset::iana::Algorithm::from_i64(i).ok_or(serde::de::Error::invalid_value(
+            serde::de::Unexpected::Signed(i),
+            &"an IANA-registered COSE algorithm value",
+        ))
+    }
+}
 
 /// > This dictionary is used to supply additional parameters when
 /// > creating a new credential.
@@ -19,8 +43,8 @@ pub struct Parameters {
     /// > algorithm with which the newly generated credential will
     /// > be used, and thus also the type of asymmetric key pair to
     /// > be generated, e.g., RSA or Elliptic Curve.
-    #[cfg_attr(feature = "serde", serde(rename = "alg"))]
-    pub algorithm: algorithms::Signature,
+    #[cfg_attr(feature = "serde", serde(rename = "alg", with = "algorithm"))]
+    pub algorithm: coset::iana::Algorithm,
 }
 
 /// > This dictionary identifies a specific public key credential.
