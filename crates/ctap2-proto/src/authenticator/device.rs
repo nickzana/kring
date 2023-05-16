@@ -2,7 +2,7 @@ use crate::authenticator::client_pin::AuthProtocolVersion;
 use crate::authenticator::Transport;
 use crate::extensions;
 use fido_common::credential::public_key;
-use fido_common::registry;
+use fido_common::{attestation, registry};
 use std::collections::{BTreeMap, BTreeSet};
 use std::num::NonZeroUsize;
 use std::usize;
@@ -275,4 +275,11 @@ pub struct Info {
     /// > `authenticatorConfig` `vendorCommandId` values supported, which MAY be
     /// > empty.
     pub vendor_prototype_config_commands: Option<BTreeSet<usize>>,
+    /// > List of supported attestation formats.
+    pub attestation_formats: Option<BTreeSet<attestation::FormatIdentifier>>,
+    /// > If present the number of internal User Verification operations since
+    /// > the last pin entry including all failed attempts.
+    pub uv_count_since_last_pin_entry: Option<usize>,
+    /// > If present the authenticator requires a 10 second touch for reset.
+    pub long_touch_for_reset: Option<bool>,
 }
