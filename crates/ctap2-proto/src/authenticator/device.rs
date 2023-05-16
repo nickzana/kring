@@ -211,6 +211,8 @@ pub enum OptionId {
     UvAuthenticatorConfig,
     #[cfg_attr(feature = "serde", serde(rename = "credMgmt"))]
     CredentialManagement,
+    #[cfg_attr(feature = "serde", serde(rename = "credentialMgmtPreview"))]
+    CredentialManagementPreview,
     #[cfg_attr(feature = "serde", serde(rename = "setMinPINLength"))]
     SetMinPinLength,
     #[cfg_attr(feature = "serde", serde(rename = "makeCredUvNotRqd"))]
