@@ -2,6 +2,17 @@ use crate::{attestation, extensions, Sha256Hash};
 use std::collections::BTreeMap;
 
 pub enum Flags {}
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum UserPresence {
+    Present,
+    NotPresent,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum UserVerification {
+    Verified,
+    NotVerified,
+}
 
 /// > The authenticator data structure encodes contextual bindings made by the
 /// > authenticator. These bindings are controlled by the authenticator itself,
@@ -16,8 +27,8 @@ pub enum Flags {}
 pub struct Data {
     /// > SHA-256 hash of the RP ID the credential is scoped to.
     pub relying_party_id_hash: Sha256Hash,
-    pub user_is_present: bool,
-    pub user_is_verified: bool,
+    pub user_presence: UserPresence,
+    pub user_verification: UserVerification,
     pub signature_counter: u32,
     pub attested_credential_data: Option<attestation::CredentialData>,
     pub extensions: Option<BTreeMap<extensions::Identifier, Vec<u8>>>,
