@@ -225,55 +225,72 @@ pub enum OptionId {
 /// > list of its supported protocol versions and extensions, its AAGUID, and
 /// > other aspects of its overall capabilities. Platforms should use this
 /// > information to tailor their command parameters choices.
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug)]
 pub struct Info {
     /// > List of supported CTAP versions.
+    #[cfg_attr(feature = "serde", serde(rename = 0x01))]
     pub versions: BTreeSet<Version>,
     /// > List of supported extensions.
+    #[cfg_attr(feature = "serde", serde(rename = 0x02))]
     pub extensions: Option<BTreeSet<extensions::Identifier>>,
     /// > The claimed AAGUID.
+    #[cfg_attr(feature = "serde", serde(rename = 0x03))]
     pub aaguid: Aaguid,
     /// > List of supported options.
+    #[cfg_attr(feature = "serde", serde(rename = 0x04))]
     pub options: Option<BTreeMap<OptionId, bool>>,
     /// > Maximum message size supported by the authenticator.
+    #[cfg_attr(feature = "serde", serde(rename = 0x05))]
     pub max_message_size: Option<usize>,
     /// > List of supported PIN/UV auth protocols in order of decreasing
     /// > authenticator preference. MUST NOT contain duplicate values...
     // Cannot be empty if present
+    #[cfg_attr(feature = "serde", serde(rename = 0x06))]
     pub pin_uv_auth_protocols: Option<Vec<AuthProtocolVersion>>,
     /// > Maximum number of credentials supported in credentialID list at a time
     /// > by the authenticator.
+    #[cfg_attr(feature = "serde", serde(rename = 0x07))]
     pub max_credential_count_in_list: Option<NonZeroUsize>,
     /// > Maximum Credential ID Length supported by the authenticator.
+    #[cfg_attr(feature = "serde", serde(rename = 0x08))]
     pub max_credential_id_length: Option<NonZeroUsize>,
     /// > List of supported transports.
+    #[cfg_attr(feature = "serde", serde(rename = 0x09))]
     pub transports: Option<BTreeSet<Transport>>,
     /// > List of supported algorithms for credential generation... The array is
     /// > ordered from most preferred to least preferred and MUST NOT include
     /// > duplicate entries...
+    #[cfg_attr(feature = "serde", serde(rename = 0x0A))]
     // Cannot be empty if present
     pub algorithms: Option<Vec<public_key::Parameters>>,
     /// > The maximum size, in bytes, of the serialized large-blob array that
     /// > this authenticator can store. If the `authenticatorLargeBlobs` command
     /// > is supported, this MUST be specified. Otherwise it MUST NOT be.
+    #[cfg_attr(feature = "serde", serde(rename = 0x0B))]
     pub max_serialized_large_blob_array_size: Option<UsizeN<1024>>,
     /// > If this member is:
     /// > - present and set to true: `getPinToken` and
     /// > `getPinUvAuthTokenUsingPinWithPermissions` will return errors until
     /// > after a successful PIN Change.
     /// > - present and set to false, or absent: no PIN Change is required.
+    #[cfg_attr(feature = "serde", serde(rename = 0x0C))]
     pub force_pin_change: Option<bool>,
     /// > This specifies the current minimum PIN length, in Unicode code points,
     /// > the authenticator enforces for ClientPIN. This is applicable for
     /// > ClientPIN only: the minPINLength member MUST be absent if the
     /// > clientPin option ID is absent; it MUST be present if the authenticator
     /// > supports authenticatorClientPIN.
+    #[cfg_attr(feature = "serde", serde(rename = 0x0D))]
     pub min_pin_length: Option<usize>,
     /// > Indicates the firmware version of the authenticator model identified
     /// > by AAGUID.
+    #[cfg_attr(feature = "serde", serde(rename = 0x0E))]
     pub firmware_version: Option<usize>,
     /// > Maximum credBlob length in bytes supported by the authenticator. Must
     /// > be present if, and only if, credBlob is included in the supported
     /// > extensions list.
+    #[cfg_attr(feature = "serde", serde(rename = 0x0F))]
     pub max_cred_blob_length: Option<UsizeN<32>>,
     /// > This specifies the max number of RP IDs that authenticator can set via
     /// > `setMinPINLength` subcommand. This is in addition to pre-configured
@@ -281,12 +298,14 @@ pub struct Info {
     /// > adding additional RP IDs, its value is 0. This MUST ONLY be present
     /// > if, and only if, the authenticator supports the `setMinPINLength`
     /// > subcommand.
+    #[cfg_attr(feature = "serde", serde(rename = 0x10))]
     pub max_rpids_for_set_min_pin_length: Option<usize>,
     /// > This specifies the preferred number of invocations of the
     /// > `getPinUvAuthTokenUsingUvWithPermissions` subCommand the platform may
     /// > attempt before falling back to the
     /// > `getPinUvAuthTokenUsingPinWithPermissions` subCommand or displaying an
     /// > error.
+    #[cfg_attr(feature = "serde", serde(rename = 0x11))]
     pub preferred_platform_uv_attempts: Option<NonZeroUsize>,
     /// > This specifies the user verification modality supported by the
     /// > authenticator via `authenticatorClientPIN`'s
@@ -294,8 +313,10 @@ pub struct Info {
     /// > to help the platform construct user dialogs. If `clientPin`
     /// > is supported it MUST NOT be included in the bit-flags, as `clientPIN`
     /// > is not a built-in user verification method.
+    #[cfg_attr(feature = "serde", serde(rename = 0x12))]
     pub uv_modality: Option<BTreeSet<registry::UserVerify>>,
     /// > This specifies a list of authenticator certifications.
+    #[cfg_attr(feature = "serde", serde(rename = 0x13))]
     pub certifications: Option<BTreeSet<Certification>>,
     /// > If this member is present it indicates the estimated number of
     /// > additional discoverable credentials that can be stored. If this value
@@ -313,17 +334,22 @@ pub struct Info {
     /// > user.id that match an existing discoverable credential and thus
     /// > overwrite it, but this value should be set assuming that will not
     /// > happen.
+    #[cfg_attr(feature = "serde", serde(rename = 0x14))]
     pub remaining_discoverable_credentials: Option<usize>,
     /// > If present the authenticator supports the `authenticatorConfig`
     /// > `vendorPrototype` subcommand, and its value is a list of
     /// > `authenticatorConfig` `vendorCommandId` values supported, which MAY be
     /// > empty.
+    #[cfg_attr(feature = "serde", serde(rename = 0x15))]
     pub vendor_prototype_config_commands: Option<BTreeSet<usize>>,
     /// > List of supported attestation formats.
+    #[cfg_attr(feature = "serde", serde(rename = 0x16))]
     pub attestation_formats: Option<BTreeSet<attestation::FormatIdentifier>>,
     /// > If present the number of internal User Verification operations since
     /// > the last pin entry including all failed attempts.
+    #[cfg_attr(feature = "serde", serde(rename = 0x17))]
     pub uv_count_since_last_pin_entry: Option<usize>,
     /// > If present the authenticator requires a 10 second touch for reset.
+    #[cfg_attr(feature = "serde", serde(rename = 0x18))]
     pub long_touch_for_reset: Option<bool>,
 }
