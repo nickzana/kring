@@ -27,7 +27,7 @@ pub trait Ctap2_2Authenticator {
     /// > authentication as well as user consent to a given transaction, using a
     /// > previously generated credential that is bound to the authenticator and
     /// > relying party identifier.
-    fn get_assertion(request: get::Request) -> Result<get::Response, get::Error>;
+    fn get_assertion(&mut self, request: get::Request) -> Result<get::Response, get::Error>;
 
     /// > Using this method, platforms can request that the authenticator report
     /// > a list of its supported protocol versions and extensions, its AAGUID,
