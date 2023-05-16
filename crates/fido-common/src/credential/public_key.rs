@@ -1,6 +1,5 @@
 use crate::registry::algorithms;
 use crate::{authenticator::Transport, credential};
-use bounded_vec::BoundedVec;
 use std::collections::BTreeSet;
 
 #[cfg(feature = "serde")]
@@ -35,7 +34,7 @@ pub struct Descriptor {
     /// > A probabilistically-unique byte sequence identifying a
     /// > public key credential source and its authentication
     /// > assertions.
-    pub id: BoundedVec<u8, 16, 1023>,
+    pub id: Vec<u8>,
     /// > This... member contains a hint as to how the client might
     /// > communicate with the managing authenticator of the public
     /// > key credential the caller is referring to.
@@ -64,7 +63,7 @@ pub struct UserEntity {
     //
     // WebAuthn says that "The user handle MUST NOT be empty." To maximimize compatibility, the
     // definition from the CTAP specs is used.
-    pub id: BoundedVec<u8, 0, 64>,
+    pub id: Vec<u8>,
     /// > a human-palatable identifier for a user account. It is intended
     /// > only for display, i.e., aiding the user in determining the
     /// > difference between user accounts with similar displayNames. For
