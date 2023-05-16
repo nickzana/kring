@@ -125,13 +125,16 @@ pub enum FidoLevel {
 
 /// These options describe properties of a CTAP device.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum OptionId {
     /// > Indicates that the device is attached to the client and therefore
     /// > can’t be removed and used on another client.
+    #[cfg_attr(feature = "serde", serde(rename = "plat"))]
     PlatformDevice,
     /// > Specifies whether this authenticator can create discoverable
     /// > credentials, and therefore can satisfy `authenticatorGetAssertion`
     /// > requests with the `allowList` parameter omitted.
+    #[cfg_attr(feature = "serde", serde(rename = "rk"))]
     DiscoverableCredentials,
     /// > ClientPIN feature support:
     /// > If present and set to true, it indicates that the device is capable of
@@ -142,8 +145,10 @@ pub enum OptionId {
     /// >
     /// > If absent, it indicates that the device is not capable of accepting a
     /// > PIN from the client.
+    #[cfg_attr(feature = "serde", serde(rename = "clientPin"))]
     ClientPin,
     /// > Indicates that the device is capable of testing user presence.
+    #[cfg_attr(feature = "serde", serde(rename = "up"))]
     UserPresence,
     /// > Indicates that the authenticator supports a built-in user verification
     /// > method. For example, devices with UI, biometrics fall into this
@@ -168,7 +173,9 @@ pub enum OptionId {
     /// > If a device is capable of both built-in user verification and Client
     /// > PIN, the authenticator will return both the "uv" and the "clientPin"
     /// > option ids.
+    #[cfg_attr(feature = "serde", serde(rename = "uv"))]
     UserVerification,
+    #[cfg_attr(feature = "serde", serde(rename = "pinUvAuthToken"))]
     PinUvAuthToken,
     /// > If this noMcGaPermissionsWithClientPin is:
     /// > - present and set to true: A `pinUvAuthToken` obtained via
@@ -186,17 +193,29 @@ pub enum OptionId {
     /// >
     /// > Note: `noMcGaPermissionsWithClientPin` MUST only be present if the
     /// > `clientPin` option ID is present.
+    #[cfg_attr(feature = "serde", serde(rename = "noMcGaPermissionsWithClientPin"))]
     NoMcGaPermissionsWithClientPin,
+    #[cfg_attr(feature = "serde", serde(rename = "largeBlobs"))]
     LargeBlobs,
+    #[cfg_attr(feature = "serde", serde(rename = "ep"))]
     EnterpriseAttestation,
+    #[cfg_attr(feature = "serde", serde(rename = "bioEnroll"))]
     BiometricEnroll,
+    #[cfg_attr(feature = "serde", serde(rename = "userVerificationMgmtPreview"))]
     UvManagementPreview,
+    #[cfg_attr(feature = "serde", serde(rename = "uvBioEnroll"))]
     UvBiometricEnroll,
+    #[cfg_attr(feature = "serde", serde(rename = "authnrCfg"))]
     AuthenticatorConfig,
+    #[cfg_attr(feature = "serde", serde(rename = "uvAcfg"))]
     UvAuthenticatorConfig,
+    #[cfg_attr(feature = "serde", serde(rename = "credMgmt"))]
     CredentialManagement,
+    #[cfg_attr(feature = "serde", serde(rename = "setMinPINLength"))]
     SetMinPinLength,
+    #[cfg_attr(feature = "serde", serde(rename = "makeCredUvNotRqd"))]
     MakeCredentialUvNotRequired,
+    #[cfg_attr(feature = "serde", serde(rename = "alwaysUv"))]
     AlwaysRequireUv,
 }
 
