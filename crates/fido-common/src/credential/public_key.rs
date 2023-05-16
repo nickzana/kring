@@ -33,6 +33,7 @@ pub(crate) mod algorithm {
 
 /// > This dictionary is used to supply additional parameters when
 /// > creating a new credential.
+#[cfg_eval]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Parameters {
@@ -79,9 +80,12 @@ pub struct Descriptor {
 /// > account to which the new public key credential will be associated at
 /// > the RP.
 /// Due to deprecation, the `icon` URL is omitted. See <https://github.com/w3c/webauthn/pull/1337/>.
-#[derive(Debug)]
+#[cfg_eval]
+#[derive(Debug, Clone)]
 #[cfg_attr(
     feature = "serde",
+    serde_as,
+    skip_serializing_none,
     derive(Serialize, Deserialize),
     serde(rename_all = "camelCase")
 )]
@@ -97,6 +101,8 @@ pub struct UserEntity {
     //
     // WebAuthn says that "The user handle MUST NOT be empty." To maximimize compatibility, the
     // definition from the CTAP specs is used.
+    // Bounds: [0, 64] bytes
+    #[cfg_attr(feature = "serde", serde_as(as = "Bytes"))]
     pub id: Vec<u8>,
     /// > a human-palatable identifier for a user account. It is intended
     /// > only for display, i.e., aiding the user in determining the
