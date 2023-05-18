@@ -113,6 +113,7 @@ pub struct Request<'a> {
 pub struct Response {
     pub format: fido_common::attestation::FormatIdentifier,
     pub authenticator_data: authenticator::Data,
+    pub attestation_statement: Option<attestation::Statement>,
     /// > Indicates whether an enterprise attestation was returned for this
     /// > credential. If `epAtt` is absent or present and set to false, then an
     /// > enterprise attestation was not returned. If `epAtt` is present and set
