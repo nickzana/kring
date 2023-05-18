@@ -5,6 +5,11 @@ use crate::{
 use fido_common::{attestation, credential::public_key};
 use std::collections::BTreeMap;
 
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+#[cfg(feature = "serde")]
+use serde_with::{serde_as, skip_serializing_none, Bytes};
+
 #[derive(Debug)]
 pub enum Error {
     OperationDenied,
@@ -26,17 +31,21 @@ pub enum Error {
 /// > The following option keys are defined for use in
 /// > `authenticatorMakeCredential`'s `options` parameter.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum OptionKey {
     /// > Specifies whether this credential is to be discoverable or
     /// > not.
+    #[cfg_attr(feature = "serde", serde(rename = "rk"))]
     Discoverable,
     /// > user presence: Instructs the authenticator to require user
     /// > consent
     /// > to complete the operation.
+    #[cfg_attr(feature = "serde", serde(rename = "up"))]
     UserPresence,
     /// > user verification: If true, instructs the authenticator to require a
     /// > user-verifying gesture in order to complete the request. Examples of
     /// > such gestures are fingerprint scan or a PIN.
+    #[cfg_attr(feature = "serde", serde(rename = "uv"))]
     UserVerification,
 }
 
