@@ -5,6 +5,7 @@ use crate::{
 use fido_common::{attestation, credential::public_key};
 use std::collections::BTreeMap;
 
+#[derive(Debug)]
 pub enum Error {
     OperationDenied,
     PinNotSet,
@@ -24,7 +25,7 @@ pub enum Error {
 
 /// > The following option keys are defined for use in
 /// > `authenticatorMakeCredential`'s `options` parameter.
-#[derive(Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum OptionKey {
     /// > Specifies whether this credential is to be discoverable or
     /// > not.
@@ -40,7 +41,7 @@ pub enum OptionKey {
 }
 
 /// Input parameters for [`Ctap2Device::make_credential`] operation.
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy)]
 pub struct Request<'a> {
     /// > Hash of the ClientData contextual binding specified by host.
     pub client_data_hash: &'a Sha256Hash,
@@ -84,6 +85,7 @@ pub struct Request<'a> {
     pub enterprise_attestation: Option<attestation::enterprise::Kind>,
 }
 
+#[derive(Debug)]
 pub struct Response {
     pub format: fido_common::attestation::FormatIdentifier,
     pub authenticator_data: authenticator::Data,

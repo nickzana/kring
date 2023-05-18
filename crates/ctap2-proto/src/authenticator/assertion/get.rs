@@ -3,6 +3,7 @@ use crate::{authenticator::client_pin::AuthProtocolVersion, extensions};
 use fido_common::credential::public_key;
 use std::{collections::BTreeMap, usize};
 
+#[derive(Debug)]
 pub enum Error {
     OperationDenied,
     PinNotSet,
@@ -20,6 +21,7 @@ pub enum Error {
 
 /// > The following option keys are defined for use in
 /// > [`assertion::get::Request`]'s `options` parameter.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum OptionKey {
     /// > user presence: Instructs the authenticator to require user consent
     /// > to complete the operation.
@@ -31,7 +33,7 @@ pub enum OptionKey {
 }
 
 /// Request parameters for [`Ctap2Device::get_assertion`] operation.
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy)]
 pub struct Request<'a> {
     /// > relying party identifier
     pub relying_party_id: &'a str,
@@ -54,6 +56,7 @@ pub struct Request<'a> {
 }
 
 /// Response structure for [`Ctap2Device::get_assertion`] operation.
+#[derive(Debug, Clone)]
 pub struct Response {
     /// > PublicKeyCredentialDescriptor structure containing the credential
     /// > identifier whose private key was used to generate the assertion.
