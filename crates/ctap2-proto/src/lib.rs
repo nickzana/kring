@@ -8,7 +8,7 @@ pub mod prelude {
         },
         Command, Ctap2_2Authenticator,
     };
-    pub use fido_common::Sha256Hash;
+    pub use fido_common::*;
 }
 use prelude::*;
 
