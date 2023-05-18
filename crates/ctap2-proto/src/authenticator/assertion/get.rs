@@ -5,6 +5,9 @@ use std::{collections::BTreeMap, usize};
 
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
+#[cfg(feature = "serde")]
+use serde_with::{serde_as, skip_serializing_none, Bytes};
+
 #[derive(Debug)]
 pub enum Error {
     OperationDenied,
@@ -38,25 +41,34 @@ pub enum OptionKey {
 }
 
 /// Request parameters for [`Ctap2Device::get_assertion`] operation.
+#[cfg_eval]
 #[derive(Debug, Clone, Copy)]
+#[cfg_attr(feature = "serde", serde_as, skip_serializing_none, derive(Serialize))]
 pub struct Request<'a> {
     /// > relying party identifier
+    #[serde(rename = 0x01)]
     pub relying_party_id: &'a str,
     /// > Hash of the serialized client data collected by the host.
+    #[cfg_attr(feature = "serde", serde_as(as = "Bytes"), serde(rename = 0x02))]
     pub client_data_hash: &'a Sha256Hash,
     /// > An array of [`public_key::Descriptor`] structures, each denoting a
     /// > credential, as specified in `WebAuthn`... If this parameter is present
     /// > the authenticator MUST only generate a assertion using one of the
     /// > denoted credentials.
     // Cannot be empty if present
+    #[serde(rename = 0x03)]
     pub allow_list: Option<&'a Vec<&'a public_key::Descriptor>>,
     /// > Parameters to influence authenticator operation. These parameters
     /// > might be authenticator specific.
+    #[serde(rename = 0x04)]
     pub extensions: Option<&'a BTreeMap<extensions::Identifier, &'a [u8]>>,
     /// > Parameters to influence authenticator operation.
+    #[serde(rename = 0x05)]
     pub options: Option<&'a BTreeMap<OptionKey, bool>>,
+    #[serde(rename = 0x06)]
     pub pin_uv_auth_param: Option<&'a [u8]>,
     /// > PIN/UV protocol version selected by platform.
+    #[serde(rename = 0x07)]
     pub pin_uv_auth_protocol_version: Option<AuthProtocolVersion>,
 }
 
