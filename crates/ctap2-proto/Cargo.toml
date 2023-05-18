@@ -10,6 +10,8 @@ fido-common = { path = "../fido-common" }
 bounded-integer = { version = "0.5.3", features = ["types", "std"] }
 coset = "0.3.3"
 serde = { version = "=1.0.136", features = ["derive"], optional = true }
+# Version <= to support older serde
+serde_with = { version = "<=2.2.0", optional = true }
 
 [features]
-serde = ["dep:serde", "fido-common/serde", "bounded-integer/serde1"]
+serde = ["dep:serde", "dep:serde_with", "fido-common/serde", "bounded-integer/serde1"]
