@@ -49,21 +49,26 @@ pub enum OptionKey {
     UserVerification,
 }
 
+#[cfg_eval]
 /// Input parameters for [`Ctap2Device::make_credential`] operation.
-#[derive(Debug, Clone, Copy)]
+#[cfg_attr(feature = "serde", serde_as, skip_serializing_none, derive(Serialize))]
 pub struct Request<'a> {
     /// > Hash of the ClientData contextual binding specified by host.
+    #[cfg_attr(feature = "serde", serde(rename = 0x01), serde_as(as = "Bytes"))]
     pub client_data_hash: &'a Sha256Hash,
     /// > This PublicKeyCredentialRpEntity data structure describes a
     /// > Relying Party with which the new public key credential will be
     /// > associated.
+    #[cfg_attr(feature = "serde", serde(rename = 0x02))]
     pub relying_party: &'a public_key::RelyingPartyEntity,
     /// > ... describes the user account to which the new public key
     /// > credential will be associated at the RP.
+    #[cfg_attr(feature = "serde", serde(rename = 0x03))]
     pub user: &'a public_key::UserEntity,
     /// > List of supported algorithms for credential generation, as
     /// > specified in [WebAuthn]. The array is ordered from most preferred
     /// > to least preferred and MUST NOT include duplicate entries.
+    #[cfg_attr(feature = "serde", serde(rename = 0x04))]
     pub public_key_credential_params: &'a [public_key::Parameters], // TODO: BTreeSet? BTreeMap
     // with preference as key?
     /// > An array of PublicKeyCredentialDescriptor structures, as specified
@@ -71,13 +76,22 @@ pub struct Request<'a> {
     /// > authenticator already contains one of the credentials enumerated
     /// > in this array. This allows RPs to limit the creation of multiple
     /// > credentials for the same account on a single authenticator.
+    #[cfg_attr(feature = "serde", serde(rename = 0x05))]
     pub exclude_list: Option<&'a [&'a public_key::Descriptor]>,
     /// > Parameters to influence authenticator operation, as specified in
     /// > [WebAuthn]. These parameters might be authenticator specific.
+    #[cfg_attr(feature = "serde", serde(rename = 0x06))]
     pub extensions: Option<&'a BTreeMap<extensions::Identifier, Vec<u8>>>,
+    #[cfg_attr(feature = "serde", serde(rename = 0x07))]
     pub options: Option<&'a BTreeMap<OptionKey, bool>>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(rename = 0x08),
+        serde_as(as = "Option<Bytes>")
+    )]
     pub pin_uv_auth_param: Option<&'a [u8]>,
     /// > PIN/UV protocol version selected by platform.
+    #[cfg_attr(feature = "serde", serde(rename = 0x09))]
     pub pin_uv_auth_protocol_version: Option<client_pin::AuthProtocolVersion>,
     /// > An authenticator supporting this enterprise attestation feature is
     /// > enterprise attestation capable and signals its support via the `ep`
@@ -91,6 +105,7 @@ pub struct Request<'a> {
     /// > attestation batching may not apply to the results of this operation
     /// > and the platform is requesting an enterprise attestation that includes
     /// > uniquely identifying information.
+    #[cfg_attr(feature = "serde", serde(rename = 0x0A))]
     pub enterprise_attestation: Option<attestation::enterprise::Kind>,
 }
 

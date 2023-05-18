@@ -1,3 +1,5 @@
+#![feature(cfg_eval)]
+
 pub mod prelude {
     pub use crate::{
         authenticator::{
