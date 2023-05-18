@@ -3,6 +3,8 @@ use crate::{authenticator::client_pin::AuthProtocolVersion, extensions};
 use fido_common::credential::public_key;
 use std::{collections::BTreeMap, usize};
 
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
 #[derive(Debug)]
 pub enum Error {
     OperationDenied,
@@ -22,13 +24,16 @@ pub enum Error {
 /// > The following option keys are defined for use in
 /// > [`assertion::get::Request`]'s `options` parameter.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum OptionKey {
     /// > user presence: Instructs the authenticator to require user consent
     /// > to complete the operation.
-    UserPrecense,
+    #[serde(rename = "up")]
+    UserPresence,
     /// > user verification: If true, instructs the authenticator to require
     /// > a user-verifying gesture in order to complete the request.
     /// > Examples of such gestures are fingerprint scan or a PIN.
+    #[serde(rename = "uv")]
     UserVerification,
 }
 
