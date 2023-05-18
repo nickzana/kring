@@ -4,6 +4,7 @@ use crate::{
 };
 use fido_common::{attestation, credential::public_key};
 use std::collections::BTreeMap;
+use typed_builder::TypedBuilder;
 
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
@@ -52,6 +53,7 @@ pub enum OptionKey {
 #[cfg_eval]
 /// Input parameters for [`Ctap2Device::make_credential`] operation.
 #[cfg_attr(feature = "serde", serde_as, skip_serializing_none, derive(Serialize))]
+#[derive(Debug, Clone, Copy, TypedBuilder)]
 pub struct Request<'a> {
     /// > Hash of the ClientData contextual binding specified by host.
     #[cfg_attr(feature = "serde", serde(rename = 0x01), serde_as(as = "Bytes"))]
@@ -76,14 +78,18 @@ pub struct Request<'a> {
     /// > authenticator already contains one of the credentials enumerated
     /// > in this array. This allows RPs to limit the creation of multiple
     /// > credentials for the same account on a single authenticator.
+    #[builder(default, setter(strip_option))]
     #[cfg_attr(feature = "serde", serde(rename = 0x05))]
     pub exclude_list: Option<&'a [&'a public_key::Descriptor]>,
     /// > Parameters to influence authenticator operation, as specified in
     /// > [WebAuthn]. These parameters might be authenticator specific.
+    #[builder(default, setter(strip_option))]
     #[cfg_attr(feature = "serde", serde(rename = 0x06))]
     pub extensions: Option<&'a BTreeMap<extensions::Identifier, Vec<u8>>>,
+    #[builder(default, setter(strip_option))]
     #[cfg_attr(feature = "serde", serde(rename = 0x07))]
     pub options: Option<&'a BTreeMap<OptionKey, bool>>,
+    #[builder(default, setter(strip_option))]
     #[cfg_attr(
         feature = "serde",
         serde(rename = 0x08),
@@ -91,6 +97,7 @@ pub struct Request<'a> {
     )]
     pub pin_uv_auth_param: Option<&'a [u8]>,
     /// > PIN/UV protocol version selected by platform.
+    #[builder(default, setter(strip_option))]
     #[cfg_attr(feature = "serde", serde(rename = 0x09))]
     pub pin_uv_auth_protocol_version: Option<client_pin::AuthProtocolVersion>,
     /// > An authenticator supporting this enterprise attestation feature is
@@ -105,6 +112,7 @@ pub struct Request<'a> {
     /// > attestation batching may not apply to the results of this operation
     /// > and the platform is requesting an enterprise attestation that includes
     /// > uniquely identifying information.
+    #[builder(default, setter(strip_option))]
     #[cfg_attr(feature = "serde", serde(rename = 0x0A))]
     pub enterprise_attestation: Option<attestation::enterprise::Kind>,
 }
