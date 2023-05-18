@@ -76,7 +76,7 @@ pub struct Request<'a> {
     /// > [WebAuthn]. These parameters might be authenticator specific.
     pub extensions: Option<&'a BTreeMap<extensions::Identifier, Vec<u8>>>,
     pub options: Option<&'a BTreeMap<OptionKey, bool>>,
-    pub pin_uv_auth_param: &'a [u8],
+    pub pin_uv_auth_param: Option<&'a [u8]>,
     /// > PIN/UV protocol version selected by platform.
     pub pin_uv_auth_protocol_version: Option<client_pin::AuthProtocolVersion>,
     /// > An authenticator supporting this enterprise attestation feature is
