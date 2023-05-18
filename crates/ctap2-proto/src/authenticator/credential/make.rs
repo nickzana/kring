@@ -109,20 +109,27 @@ pub struct Request<'a> {
     pub enterprise_attestation: Option<attestation::enterprise::Kind>,
 }
 
+#[cfg_attr(feature = "serde", derive(Deserialize))]
 #[derive(Debug)]
 pub struct Response {
+    #[cfg_attr(feature = "serde", serde(rename = 0x01))]
     pub format: fido_common::attestation::FormatIdentifier,
+    #[cfg_attr(feature = "serde", serde(rename = 0x02))]
     pub authenticator_data: authenticator::Data,
+    #[cfg_attr(feature = "serde", serde(rename = 0x03))]
     pub attestation_statement: Option<attestation::Statement>,
     /// > Indicates whether an enterprise attestation was returned for this
     /// > credential. If `epAtt` is absent or present and set to false, then an
     /// > enterprise attestation was not returned. If `epAtt` is present and set
     /// > to true, then an enterprise attestation was returned.
+    #[cfg_attr(feature = "serde", serde(rename = 0x04))]
     pub enterprise_attestation: Option<bool>,
     /// > Contains the `largeBlobKey` for the credential, if requested with the
     /// > `largeBlobKey` extension.
+    #[cfg_attr(feature = "serde", serde(rename = 0x05))]
     pub large_blob_key: Option<Vec<u8>>,
     /// > A map, keyed by extension identifiers, to unsigned outputs of
     /// > extensions, if any.
+    #[cfg_attr(feature = "serde", serde(rename = 0x06))]
     pub unsigned_extension_outputs: Option<BTreeMap<extensions::Identifier, Vec<u8>>>,
 }
