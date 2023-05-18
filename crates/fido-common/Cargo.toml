@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 ciborium = { version = "0.2.1", default-features = false, optional = true }
 coset = { version = "0.3.4", default-features = false }
-serde = { version = "1", features = ["derive"], optional = true }
+serde = { version = "=1.0.136", features = ["derive"], optional = true }
 serde_with = { path = "../../../serde_with/serde_with", optional = true }
 bitflags = { version = "2.2.1", default-features = false, optional = true }
 

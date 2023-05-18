@@ -9,7 +9,7 @@ edition = "2021"
 fido-common = { path = "../fido-common" }
 bounded-integer = { version = "0.5.3", features = ["types", "std"] }
 coset = "0.3.3"
-serde = { version = "1.0", features = ["derive"], optional = true }
+serde = { version = "=1.0.136", features = ["derive"], optional = true }
 
 [features]
 serde = ["dep:serde", "fido-common/serde", "bounded-integer/serde1"]

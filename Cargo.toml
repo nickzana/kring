@@ -3,3 +3,6 @@
 members = [
 	"crates/*",
 ]
+
+[patch.crates-io]
+serde = { git = "https://github.com/AndrewScull/serde", branch = "intnames" }
