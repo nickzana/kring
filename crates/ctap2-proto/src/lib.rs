@@ -43,12 +43,15 @@ pub trait Ctap2_2Authenticator {
     /// > `pinUvAuthProtocol`) ensures that PINs are encrypted when sent to an
     /// > authenticator and are exchanged for a `pinUvAuthToken` that serves to
     /// > authenticate subsequent commands.
-    fn client_pin(request: client_pin::Request) -> Result<client_pin::Response, client_pin::Error>;
+    fn client_pin(
+        &mut self,
+        request: client_pin::Request,
+    ) -> Result<client_pin::Response, client_pin::Error>;
 
     #[allow(clippy::missing_errors_doc)]
     /// > This method is used by the client to reset an authenticator back to a
     /// > factory default state.
-    fn reset() -> Result<(), reset::Error>;
+    fn reset(&mut self) -> Result<(), reset::Error>;
 
     // fn bio_enrollment(
     // request: bio_enrollment::Request,
@@ -64,7 +67,7 @@ pub trait Ctap2_2Authenticator {
     #[allow(clippy::missing_errors_doc)]
     /// > This command allows the platform to let a user select a certain
     /// > authenticator by asking for user presence.
-    fn selection() -> Result<(), authenticator::selection::Error>;
+    fn selection(&mut self) -> Result<(), authenticator::selection::Error>;
 
     // fn large_blobs() -> Result<(), ()>;
 
