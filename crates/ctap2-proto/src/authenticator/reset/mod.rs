@@ -1,4 +1,9 @@
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
 /// Possible errors for the [`Ctap2Device::reset`] command.
+#[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum Error {
     /// Returned if the `reset` operation is disabled for the transport used or
     /// if user precense is explicitly denied.
