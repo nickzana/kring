@@ -21,7 +21,7 @@ use serde::{Deserialize, Serialize};
 /// > Extensions that may exist in multiple versions should take care to include
 /// > a version in their identifier. In effect, different versions are thus
 /// > treated as different extensions, e.g., `myCompany_extension_01`
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum Identifier {
     #[cfg_attr(feature = "serde", serde(rename = "appid"))]

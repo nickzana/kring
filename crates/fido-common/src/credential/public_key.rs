@@ -34,7 +34,7 @@ pub(crate) mod algorithm {
 /// > This dictionary is used to supply additional parameters when
 /// > creating a new credential.
 #[cfg_eval]
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Parameters {
     /// > This member specifies the type of credential to be
@@ -52,7 +52,7 @@ pub struct Parameters {
 
 /// > This dictionary identifies a specific public key credential.
 #[cfg_eval]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(
     feature = "serde",
     serde_as,
@@ -118,7 +118,7 @@ pub struct UserEntity {
 
 /// > This `PublicKeyCredentialRpEntity` data structure describes a Relying
 /// > Party with which the new public key credential will be associated.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct RelyingPartyEntity {
     /// > A unique identifier for the Relying Party entity.
