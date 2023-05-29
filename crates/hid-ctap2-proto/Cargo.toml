@@ -1,0 +1,18 @@
+[package]
+name = "hid-ctap2-proto"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ciborium = "0.2.1"
+ciborium-io = "0.2.1"
+ctap2-proto = { path = "../ctap2-proto", features = ["serde"] }
+hidapi = { version = "2.3.2" }
+ctaphid = { version = "0.3.1", default_features = false }
+serde = "=1.0.136"
+
+[dev-dependencies]
+rand = "0.8.5"
+env_logger = "0.10.0"

@@ -1,0 +1,1 @@
+- Validate SSL certificates for origin

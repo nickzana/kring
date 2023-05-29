@@ -1,5 +1,7 @@
 #![feature(cfg_eval, split_array, slice_take)]
 
+#![cfg_attr(not(feature = "std"), no_std)]
+
 pub mod attestation;
 pub mod authenticator;
 pub mod credential;
