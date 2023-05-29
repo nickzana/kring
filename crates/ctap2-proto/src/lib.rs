@@ -48,21 +48,19 @@ pub trait Ctap2_2Authenticator {
         request: client_pin::Request,
     ) -> Result<client_pin::Response, client_pin::Error>;
 
-    #[allow(clippy::missing_errors_doc)]
     /// > This method is used by the client to reset an authenticator back to a
     /// > factory default state.
     fn reset(&mut self) -> Result<(), reset::Error>;
 
-    // fn bio_enrollment(
-    // request: bio_enrollment::Request,
-    // ) -> Result<bio_enrollment::Response, bio_enrollment::Error>;
+    fn bio_enrollment(
+        request: bio_enrollment::Request,
+    ) -> Result<bio_enrollment::Response, bio_enrollment::Error>;
 
-    // #[allow(clippy::missing_errors_doc)]
     // > This command is used by the platform to manage discoverable
     // > credentials on the authenticator.
-    // fn credential_management(
-    // request: management::Request,
-    // ) -> Result<management::Response, management::Error>;
+    fn credential_management(
+        request: management::Request,
+    ) -> Result<management::Response, management::Error>;
 
     #[allow(clippy::missing_errors_doc)]
     /// > This command allows the platform to let a user select a certain
@@ -71,11 +69,10 @@ pub trait Ctap2_2Authenticator {
 
     // fn large_blobs() -> Result<(), ()>;
 
-    // #[allow(clippy::missing_errors_doc)]
+    #[allow(clippy::missing_errors_doc)]
     // > This command is used to configure various authenticator features
     // > through the use of its subcommands.
-    // fn authenticator_config(request: config::Request) -> Result<(),
-    // config::Error>;
+    fn authenticator_config(&mut self, request: config::Request) -> Result<(), config::Error>;
 }
 
 #[repr(u8)]
