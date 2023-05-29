@@ -53,12 +53,14 @@ pub trait Ctap2_2Authenticator {
     fn reset(&mut self) -> Result<(), reset::Error>;
 
     fn bio_enrollment(
+        &mut self,
         request: bio_enrollment::Request,
     ) -> Result<bio_enrollment::Response, bio_enrollment::Error>;
 
     // > This command is used by the platform to manage discoverable
     // > credentials on the authenticator.
     fn credential_management(
+        &mut self,
         request: management::Request,
     ) -> Result<management::Response, management::Error>;
 
