@@ -46,17 +46,6 @@ impl<'de> Deserialize<'de> for AuthProtocolVersion {
     }
 }
 
-pub enum Subcommand {
-    GetPinRetries,
-    GetKeyAgreement,
-    SetPin,
-    ChangePin,
-    GetPinToken,
-    GetPinUvAuthTokenUsingUvWithPermissions,
-    GetUvRetries,
-    GetPinUvAuthTokenUsingPinWithPermissions,
-}
-
 #[derive(Clone, Copy)]
 pub enum Request<'a> {
     GetPinRetries,
