@@ -1,5 +1,5 @@
 #![feature(async_fn_in_trait, adt_const_params, associated_const_equality)]
-#![allow(incomplete_features, clippy::unused_async, clippy::doc_markdown)]
+#![allow(incomplete_features)]
 
 pub mod attestation;
 pub mod authenticator;
