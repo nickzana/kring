@@ -81,7 +81,7 @@ pub struct Descriptor {
 /// > the RP.
 /// Due to deprecation, the `icon` URL is omitted. See <https://github.com/w3c/webauthn/pull/1337/>.
 #[cfg_eval]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",
     serde_as,
@@ -118,7 +118,7 @@ pub struct UserEntity {
 
 /// > This `PublicKeyCredentialRpEntity` data structure describes a Relying
 /// > Party with which the new public key credential will be associated.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct RelyingPartyEntity {
     /// > A unique identifier for the Relying Party entity.
