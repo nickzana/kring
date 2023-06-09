@@ -77,7 +77,7 @@ pub enum FormatIdentifier {
 }
 
 #[cfg_eval]
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",
     serde_as,
