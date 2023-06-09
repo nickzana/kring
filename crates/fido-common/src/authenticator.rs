@@ -195,5 +195,6 @@ pub enum Transport {
     /// > authenticators are not removable from the client device.
     #[cfg_attr(feature = "serde", serde(rename = "internal"))]
     Internal,
-    Unknown(String),
+    // TODO: Serialize as contents of string
+    Unknown(String), 
 }
