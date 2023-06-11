@@ -1,4 +1,4 @@
-use crate::authenticator::client_pin::AuthProtocolVersion;
+use crate::authenticator::client_pin::auth_protocol;
 use crate::authenticator::Transport;
 use crate::extensions;
 use fido_common::credential::public_key;
@@ -247,7 +247,7 @@ pub struct Info {
     /// > authenticator preference. MUST NOT contain duplicate values...
     // Cannot be empty if present
     #[cfg_attr(feature = "serde", serde(rename = 0x06))]
-    pub pin_uv_auth_protocols: Option<Vec<AuthProtocolVersion>>,
+    pub pin_uv_auth_protocols: Option<Vec<auth_protocol::Version>>,
     /// > Maximum number of credentials supported in credentialID list at a time
     /// > by the authenticator.
     #[cfg_attr(feature = "serde", serde(rename = 0x07))]

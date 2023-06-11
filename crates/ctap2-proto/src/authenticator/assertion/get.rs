@@ -1,5 +1,5 @@
 use crate::Sha256Hash;
-use crate::{authenticator::client_pin::AuthProtocolVersion, extensions};
+use crate::{authenticator::client_pin::auth_protocol, extensions};
 use fido_common::credential::public_key;
 use std::{collections::BTreeMap, usize};
 
@@ -69,7 +69,7 @@ pub struct Request<'a> {
     pub pin_uv_auth_param: Option<&'a [u8]>,
     /// > PIN/UV protocol version selected by platform.
     #[cfg_attr(feature = "serde", serde(rename = 0x07))]
-    pub pin_uv_auth_protocol_version: Option<AuthProtocolVersion>,
+    pub pin_uv_auth_protocol_version: Option<auth_protocol::Version>,
 }
 
 /// Response structure for [`Ctap2Device::get_assertion`] operation.

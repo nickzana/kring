@@ -1,19 +1,19 @@
 use std::collections::BTreeMap;
 
-use super::client_pin::AuthProtocolVersion;
+use super::client_pin::auth_protocol;
 
 #[derive(Clone, Copy)]
 pub enum Request<'a> {
     /// > This `enableEnterpriseAttestation` subcommand is only implemented if
     /// > the enterprise attestation feature is supported.
     EnableEnterpriseAttestation {
-        pin_uv_auth_protocol: AuthProtocolVersion,
+        pin_uv_auth_protocol: auth_protocol::Version,
         pin_uv_auth_param: &'a [u8], // TODO: Is using a more specific type possible?
     },
     /// > This `toggleAlwaysUv` subcommand is only implemented if the Always
     /// > Require User Verification feature is supported.
     ToggleAlwaysUserVerification {
-        pin_uv_auth_protocol: AuthProtocolVersion,
+        pin_uv_auth_protocol: auth_protocol::Version,
         pin_uv_auth_param: &'a [u8], // TODO: Is using a more specific type possible?
     },
     /// > This `setMinPINLength` subcommand is only implemented if the
@@ -22,7 +22,7 @@ pub enum Request<'a> {
     /// > This command sets the minimum PIN length in Unicode code points to be
     /// > enforced by the authenticator while changing/setting up a ClientPIN.
     SetMinPinLength {
-        pin_uv_auth_protocol: AuthProtocolVersion,
+        pin_uv_auth_protocol: auth_protocol::Version,
         pin_uv_auth_param: &'a [u8], // TODO: Is using a more specific type possible?
     },
     /// > This subCommand allows vendors to test authenticator configuration
@@ -39,7 +39,7 @@ pub enum Request<'a> {
         vendor_command_id: usize,
         params: &'a BTreeMap<Vec<u8>, Vec<u8>>, /* TODO: Is the character space of keys
                                                  * restricted to UTF-8? */
-        pin_uv_auth_protocol: AuthProtocolVersion,
+        pin_uv_auth_protocol: auth_protocol::Version,
         pin_uv_auth_param: &'a [u8], // TODO: Is using a more specific type possible?
     },
 }

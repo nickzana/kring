@@ -7,13 +7,13 @@ pub type PinUvAuthParam = [u8; 16];
 pub enum Request<'a> {
     GetCredentialsMetadata {
         /// > PIN/UV protocol version chosen by the platform.
-        pin_uv_auth_protocol: client_pin::AuthProtocolVersion,
+        pin_uv_auth_protocol: client_pin::auth_protocol::Version,
         /// > First 16 bytes of HMAC-SHA-256 of contents using `pinUvAuthToken`.
         pin_uv_auth_param: &'a PinUvAuthParam,
     },
     EnumerateRPsBegin {
         /// > PIN/UV protocol version chosen by the platform.
-        pin_uv_auth_protocol: client_pin::AuthProtocolVersion,
+        pin_uv_auth_protocol: client_pin::auth_protocol::Version,
         /// > First 16 bytes of HMAC-SHA-256 of contents using `pinUvAuthToken`.
         pin_uv_auth_param: &'a PinUvAuthParam,
     },
@@ -22,7 +22,7 @@ pub enum Request<'a> {
         /// The ID of the relying party to enumerate credentials for.
         relying_party_id_hash: &'a Sha256Hash,
         /// > PIN/UV protocol version chosen by the platform.
-        pin_uv_auth_protocol: client_pin::AuthProtocolVersion,
+        pin_uv_auth_protocol: client_pin::auth_protocol::Version,
         /// > First 16 bytes of HMAC-SHA-256 of contents using `pinUvAuthToken`.
         pin_uv_auth_param: &'a PinUvAuthParam,
     },
@@ -31,7 +31,7 @@ pub enum Request<'a> {
         /// The ID of the credential to delete.
         credential_id: &'a public_key::Descriptor,
         /// > PIN/UV protocol version chosen by the platform.
-        pin_uv_auth_protocol: client_pin::AuthProtocolVersion,
+        pin_uv_auth_protocol: client_pin::auth_protocol::Version,
         /// > First 16 bytes of HMAC-SHA-256 of contents using `pinUvAuthToken`.
         pin_uv_auth_param: &'a PinUvAuthParam,
     },
@@ -41,7 +41,7 @@ pub enum Request<'a> {
         /// The updated user information.
         user: &'a public_key::UserEntity,
         /// > PIN/UV protocol version chosen by the platform.
-        pin_uv_auth_protocol: client_pin::AuthProtocolVersion,
+        pin_uv_auth_protocol: client_pin::auth_protocol::Version,
         /// > First 16 bytes of HMAC-SHA-256 of contents using `pinUvAuthToken`.
         pin_uv_auth_param: &'a PinUvAuthParam,
     },

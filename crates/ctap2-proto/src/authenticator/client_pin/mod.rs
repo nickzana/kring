@@ -4,55 +4,15 @@ use std::collections::BTreeSet;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(
-    feature = "serde",
-    derive(Serialize, Deserialize),
-    serde(into = "u8", try_from = "u8")
-)]
-pub enum AuthProtocolVersion {
-    One = 1,
-    Two = 2,
-}
+pub mod auth_protocol;
 
-impl From<AuthProtocolVersion> for u8 {
-    fn from(value: AuthProtocolVersion) -> Self {
-        value as u8
-    }
-}
+pub type PinUvAuthParam = [u8; 16];
 
-impl TryFrom<u8> for AuthProtocolVersion {
-    type Error = Error;
-
-    fn try_from(value: u8) -> Result<Self, Self::Error> {
-        match value {
-            1 => Ok(AuthProtocolVersion::One),
-            2 => Ok(AuthProtocolVersion::Two),
-            _ => Err(Error::InvalidParameter),
-        }
-    }
-}
-    where
-        D: serde::Deserializer<'de>,
-    {
-        use serde::de;
-
-        match u8::deserialize(deserializer)? {
-            1 => Ok(Self::One),
-            2 => Ok(Self::Two),
-            i => Err(de::Error::invalid_value(
-                de::Unexpected::Unsigned(i.into()),
-                &"1 or 2",
-            )),
-        }
-    }
-}
-
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 pub enum Request<'a> {
     GetPinRetries,
     GetKeyAgreement {
-        version: AuthProtocolVersion,
+        version: auth_protocol::Version,
     },
     SetPin {
         key_agreement: &'a coset::CoseKey,
@@ -60,25 +20,25 @@ pub enum Request<'a> {
         pin_uv_auth_param: &'a [u8],
     },
     ChangePin {
-        version: AuthProtocolVersion,
+        version: auth_protocol::Version,
         pin_hash_encrypted: &'a [u8],
         new_pin_encrypted: &'a [u8],
         pin_uv_auth_param: &'a [u8],
     },
     GetPinToken {
-        version: AuthProtocolVersion,
-        key_agreement: &'a coset::CoseKey,
+        version: auth_protocol::Version,
+        key_agreement: cosey::PublicKey,
         pin_hash_encrypted: &'a [u8],
     },
     GetPinUvAuthTokenUsingUvWithPermissions {
-        version: AuthProtocolVersion,
+        version: auth_protocol::Version,
         key_agreement: &'a coset::CoseKey,
         permissions: &'a BTreeSet<Permission>, // TODO: Enforce non-empty set?
         relying_party_id: Option<usize>,
     },
     GetUvRetries,
     GetPinUvAuthTokenUsingPinWithPermissions {
-        version: AuthProtocolVersion,
+        version: auth_protocol::Version,
         key_agreement: &'a coset::CoseKey,
         pin_hash_encrypted: usize,
         permissions: &'a BTreeSet<Permission>, // TODO: Enforce non-empty set?
@@ -126,6 +86,7 @@ pub enum Response {
     },
 }
 
+#[derive(Debug, Clone, Copy)]
 pub enum Error {
     MissingParameter,
     InvalidParameter,
@@ -140,6 +101,26 @@ pub enum Error {
     UserVerificationBlocked,
     UserActionTimeout,
     UserVerificationInvalid,
+}
+
+impl std::fmt::Display for Error {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Error::MissingParameter => write!(f, "Missing parameter"),
+            Error::InvalidParameter => write!(f, "Invalid parameter"),
+            Error::PinAuthInvalid => write!(f, "PIN auth invalid"),
+            Error::PinPolicyViolation => write!(f, "PIN policy violation"),
+            Error::PinBlocked => write!(f, "PIN blocked"),
+            Error::PinAuthBlocked => write!(f, "PIN auth blocked"),
+            Error::PinInvalid => write!(f, "PIN invalid"),
+            Error::OperationDenied => write!(f, "Operation denied"),
+            Error::UnauthorizedPermission => write!(f, "Unauthorized permission"),
+            Error::NotAllowed => write!(f, "Not allowed"),
+            Error::UserVerificationBlocked => write!(f, "User verification blocked"),
+            Error::UserActionTimeout => write!(f, "User action timeout"),
+            Error::UserVerificationInvalid => write!(f, "User verification invalid"),
+        }
+    }
 }
 
 /// > When obtaining a `pinUvAuthToken`, the platform requests permissions

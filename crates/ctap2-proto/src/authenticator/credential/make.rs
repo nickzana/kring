@@ -99,7 +99,7 @@ pub struct Request<'a> {
     /// > PIN/UV protocol version selected by platform.
     #[builder(default, setter(strip_option))]
     #[cfg_attr(feature = "serde", serde(rename = 0x09))]
-    pub pin_uv_auth_protocol_version: Option<client_pin::AuthProtocolVersion>,
+    pub pin_uv_auth_protocol_version: Option<client_pin::auth_protocol::Version>,
     /// > An authenticator supporting this enterprise attestation feature is
     /// > enterprise attestation capable and signals its support via the `ep`
     /// > Option ID in the `authenticatorGetInfo` command response.
