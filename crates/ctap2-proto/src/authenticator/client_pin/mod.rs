@@ -5,31 +5,33 @@ use std::collections::BTreeSet;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(into = "u8", try_from = "u8")
+)]
 pub enum AuthProtocolVersion {
-    One,
-    Two,
+    One = 1,
+    Two = 2,
 }
 
-// workaround until <https://github.com/serde-rs/serde/pull/2056> is merged
-// PR: ( Integer/boolean tags for internally/adjacently tagged enums #2056 )
-#[cfg(feature = "serde")]
-impl Serialize for AuthProtocolVersion {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        serializer.serialize_u8(match self {
-            AuthProtocolVersion::One => 1,
-            AuthProtocolVersion::Two => 2,
-        })
+impl From<AuthProtocolVersion> for u8 {
+    fn from(value: AuthProtocolVersion) -> Self {
+        value as u8
     }
 }
 
-// workaround until <https://github.com/serde-rs/serde/pull/2056> is merged
-// PR: ( Integer/boolean tags for internally/adjacently tagged enums #2056 )
-#[cfg(feature = "serde")]
-impl<'de> Deserialize<'de> for AuthProtocolVersion {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+impl TryFrom<u8> for AuthProtocolVersion {
+    type Error = Error;
+
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        match value {
+            1 => Ok(AuthProtocolVersion::One),
+            2 => Ok(AuthProtocolVersion::Two),
+            _ => Err(Error::InvalidParameter),
+        }
+    }
+}
     where
         D: serde::Deserializer<'de>,
     {
