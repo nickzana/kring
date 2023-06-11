@@ -31,12 +31,12 @@ pub enum Error {
 pub enum OptionKey {
     /// > user presence: Instructs the authenticator to require user consent
     /// > to complete the operation.
-    #[serde(rename = "up")]
+    #[cfg_attr(feature = "serde", serde(rename = "up"))]
     UserPresence,
     /// > user verification: If true, instructs the authenticator to require
     /// > a user-verifying gesture in order to complete the request.
     /// > Examples of such gestures are fingerprint scan or a PIN.
-    #[serde(rename = "uv")]
+    #[cfg_attr(feature = "serde", serde(rename = "uv"))]
     UserVerification,
 }
 
@@ -46,7 +46,7 @@ pub enum OptionKey {
 #[cfg_attr(feature = "serde", serde_as, skip_serializing_none, derive(Serialize))]
 pub struct Request<'a> {
     /// > relying party identifier
-    #[serde(rename = 0x01)]
+    #[cfg_attr(feature = "serde", serde(rename = 0x01))]
     pub relying_party_id: &'a str,
     /// > Hash of the serialized client data collected by the host.
     #[cfg_attr(feature = "serde", serde_as(as = "Bytes"), serde(rename = 0x02))]
@@ -56,19 +56,19 @@ pub struct Request<'a> {
     /// > the authenticator MUST only generate a assertion using one of the
     /// > denoted credentials.
     // Cannot be empty if present
-    #[serde(rename = 0x03)]
+    #[cfg_attr(feature = "serde", serde(rename = 0x03))]
     pub allow_list: Option<&'a Vec<&'a public_key::Descriptor>>,
     /// > Parameters to influence authenticator operation. These parameters
     /// > might be authenticator specific.
-    #[serde(rename = 0x04)]
+    #[cfg_attr(feature = "serde", serde(rename = 0x04))]
     pub extensions: Option<&'a BTreeMap<extensions::Identifier, &'a [u8]>>,
     /// > Parameters to influence authenticator operation.
-    #[serde(rename = 0x05)]
+    #[cfg_attr(feature = "serde", serde(rename = 0x05))]
     pub options: Option<&'a BTreeMap<OptionKey, bool>>,
-    #[serde(rename = 0x06)]
+    #[cfg_attr(feature = "serde", serde(rename = 0x06))]
     pub pin_uv_auth_param: Option<&'a [u8]>,
     /// > PIN/UV protocol version selected by platform.
-    #[serde(rename = 0x07)]
+    #[cfg_attr(feature = "serde", serde(rename = 0x07))]
     pub pin_uv_auth_protocol_version: Option<AuthProtocolVersion>,
 }
 
@@ -84,7 +84,7 @@ pub struct Request<'a> {
 pub struct Response {
     /// > PublicKeyCredentialDescriptor structure containing the credential
     /// > identifier whose private key was used to generate the assertion.
-    #[serde(rename = 0x01)]
+    #[cfg_attr(feature = "serde", serde(rename = 0x01))]
     pub credential: public_key::Descriptor,
     /// > The signed-over contextual bindings made by the authenticator, as
     /// > specified in [WebAuthn].
@@ -96,18 +96,18 @@ pub struct Response {
     pub signature: Vec<u8>,
     /// > [`public_key::UserEntity`] structure containing the user account
     /// > information
-    #[serde(rename = 0x04)]
+    #[cfg_attr(feature = "serde", serde(rename = 0x04))]
     pub user: Option<public_key::UserEntity>,
     /// > Total number of account credentials for the RP. Optional; defaults
     /// > to one. This member is required when more than one credential is
     /// > found for an RP, and the authenticator does not have a display or
     /// > the UV & UP flags are false.
-    #[serde(rename = 0x05)]
+    #[cfg_attr(feature = "serde", serde(rename = 0x05))]
     pub number_of_credentials: Option<usize>,
     /// > Indicates that a credential was selected by the user via
     /// > interaction directly with the authenticator, and thus the platform
     /// > does not need to confirm the credential.
-    #[serde(rename = 0x06)]
+    #[cfg_attr(feature = "serde", serde(rename = 0x06))]
     pub user_selected: Option<bool>,
     /// > The contents of the associated `largeBlobKey` if present for the
     /// > asserted credential, and if `largeBlobKey` was true in the
