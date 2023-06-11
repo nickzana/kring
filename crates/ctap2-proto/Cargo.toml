@@ -13,6 +13,7 @@ serde = { version = "=1.0.136", features = ["derive"], optional = true }
 typed-builder = { version = "0.14.0", default-features = false }
 # Version <= to support older serde
 serde_with = { version = "<=2.2.0", optional = true }
+cosey = "0.3.0"
 
 [dev-dependencies]
 hex = "0.4.3"
