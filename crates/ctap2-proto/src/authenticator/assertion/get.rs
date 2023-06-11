@@ -112,6 +112,10 @@ pub struct Response {
     /// > The contents of the associated `largeBlobKey` if present for the
     /// > asserted credential, and if `largeBlobKey` was true in the
     /// > extensions input.
-    #[cfg_attr(feature = "serde", serde_as(as = "Option<Bytes>"), serde(rename = 0x07))]
+    #[cfg_attr(
+        feature = "serde",
+        serde_as(as = "Option<Bytes>"),
+        serde(rename = 0x07)
+    )]
     pub large_blob_key: Option<Vec<u8>>,
 }
