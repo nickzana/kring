@@ -61,11 +61,7 @@ pub enum Response {
     GetKeyAgreement {
         key_agreement: cosey::PublicKey,
     },
-    SetPin {
-        key_agreement: coset::CoseKey,
-        new_pin_encrypted: [u8; 64],
-        pin_uv_auth_param: (),
-    },
+    SetPin,
     ChangePin,
     GetPinToken,
     GetPinUvAuthTokenUsingUvWithPermissions {
