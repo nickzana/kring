@@ -10,6 +10,9 @@ pub mod auth_protocol;
 #[cfg(feature = "serde")]
 mod raw;
 
+#[cfg(feature = "serde")]
+use raw::RawRequest;
+
 pub type PinUvAuthParam = [u8; 16];
 
 
@@ -64,6 +67,12 @@ impl SerializeAs<PinUvAuthToken> for Bytes {
         }
     }
 }
+#[derive(Clone, Debug)]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(into = "RawRequest", try_from = "RawRequest")
+)]
 pub enum Request<'a> {
     GetPinRetries,
     GetKeyAgreement {
