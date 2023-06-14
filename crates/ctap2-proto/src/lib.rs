@@ -1,4 +1,4 @@
-#![feature(cfg_eval)]
+#![feature(cfg_eval, adt_const_params)]
 
 pub mod prelude {
     pub use crate::{
