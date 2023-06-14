@@ -183,6 +183,127 @@ impl<'a> TryFrom<RawRequest<'a>> for Request<'a> {
     }
 }
 
+#[serde_as]
+#[derive(Serialize, Deserialize)]
+pub(crate) struct RawResponse {
+    #[serde(
+        rename = 0x01,
+        default, // Allows for None variant to be deserialized when 0x01 is not present, required
+                 // because of deserialize_with
+        deserialize_with = "public_key::deserialize",
+        skip_serializing_if = "Option::is_none",
+    )]
+    pub key_agreement: Option<cosey::PublicKey>,
+    #[serde_as(as = "Option<Bytes>")]
+    #[serde(rename = 0x02, skip_serializing_if = "Option::is_none")]
+    pub pin_uv_auth_token: Option<PinUvAuthToken>,
+    #[serde(rename = 0x03, skip_serializing_if = "Option::is_none")]
+    pub pin_retries: Option<usize>,
+    #[serde(rename = 0x04, skip_serializing_if = "Option::is_none")]
+    pub power_cycle_state: Option<usize>,
+    #[serde(rename = 0x05, skip_serializing_if = "Option::is_none")]
+    pub uv_retries: Option<usize>,
+}
+
+impl From<Response> for RawResponse {
+    fn from(value: Response) -> Self {
+        match value {
+            Response::GetPinRetries {
+                pin_retries,
+                power_cycle_state,
+            } => Self {
+                key_agreement: None,
+                pin_uv_auth_token: None,
+                pin_retries: Some(pin_retries),
+                power_cycle_state,
+                uv_retries: None,
+            },
+            Response::GetKeyAgreement { key_agreement } => Self {
+                key_agreement: Some(key_agreement),
+                pin_uv_auth_token: None,
+                pin_retries: None,
+                power_cycle_state: None,
+                uv_retries: None,
+            },
+            Response::SetPin => Self {
+                key_agreement: None,
+                pin_uv_auth_token: None,
+                pin_retries: None,
+                power_cycle_state: None,
+                uv_retries: None,
+            },
+            Response::ChangePin => Self {
+                key_agreement: None,
+                pin_uv_auth_token: None,
+                pin_retries: None,
+                power_cycle_state: None,
+                uv_retries: None,
+            },
+            Response::GetPinToken { pin_uv_auth_token } => Self {
+                key_agreement: None,
+                pin_uv_auth_token: Some(pin_uv_auth_token),
+                pin_retries: None,
+                power_cycle_state: None,
+                uv_retries: None,
+            },
+            Response::GetPinUvAuthTokenUsingUvWithPermissions { pin_uv_auth_token } => Self {
+                key_agreement: None,
+                pin_uv_auth_token: Some(pin_uv_auth_token),
+                pin_retries: None,
+                power_cycle_state: None,
+                uv_retries: None,
+            },
+            Response::GetUvRetries { uv_retries } => Self {
+                key_agreement: None,
+                pin_uv_auth_token: None,
+                pin_retries: None,
+                power_cycle_state: None,
+                uv_retries: Some(uv_retries.get()),
+            },
+            Response::GetPinUvAuthTokenUsingPinWithPermissions { pin_uv_auth_token } => Self {
+                key_agreement: None,
+                pin_uv_auth_token: Some(pin_uv_auth_token),
+                pin_retries: None,
+                power_cycle_state: None,
+                uv_retries: None,
+            },
+        }
+    }
+}
+
+impl TryFrom<RawResponse> for Response {
+    type Error = Error;
+
+    fn try_from(value: RawResponse) -> Result<Self, Self::Error> {
+        Ok(match value {
+            RawResponse {
+                key_agreement: None,
+                pin_uv_auth_token: None,
+                pin_retries: Some(pin_retries),
+                power_cycle_state,
+                uv_retries: None,
+            } => Response::GetPinRetries {
+                pin_retries,
+                power_cycle_state,
+            },
+            RawResponse {
+                key_agreement: Some(key_agreement),
+                pin_uv_auth_token: None,
+                pin_retries: None,
+                power_cycle_state: None,
+                uv_retries: None,
+            } => Response::GetKeyAgreement { key_agreement },
+            RawResponse {
+                key_agreement: None,
+                pin_uv_auth_token: Some(pin_uv_auth_token),
+                pin_retries: None,
+                power_cycle_state: None,
+                uv_retries: None,
+            } => Response::GetPinToken { pin_uv_auth_token },
+            _ => todo!(),
+        })
+    }
+}
 
 flags! {
     #[derive(Serialize, Deserialize)]

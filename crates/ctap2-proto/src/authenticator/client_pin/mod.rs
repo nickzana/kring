@@ -11,7 +11,7 @@ pub mod auth_protocol;
 mod raw;
 
 #[cfg(feature = "serde")]
-use raw::RawRequest;
+use raw::{RawRequest, RawResponse};
 
 pub type PinUvAuthParam = [u8; 16];
 
@@ -112,6 +112,12 @@ pub enum Request<'a> {
     },
 }
 
+#[derive(Clone, Debug)]
+#[cfg_attr(
+    feature = "serde",
+    derive(Serialize, Deserialize),
+    serde(into = "RawResponse", try_from = "RawResponse")
+)]
 pub enum Response {
     GetPinRetries {
         pin_retries: usize,
