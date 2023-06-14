@@ -16,12 +16,13 @@ pub enum Request<'a> {
     },
     SetPin {
         version: auth_protocol::Version,
-        key_agreement: &'a coset::CoseKey,
+        key_agreement: cosey::PublicKey,
         new_pin_encrypted: &'a [u8],
         pin_uv_auth_param: &'a [u8],
     },
     ChangePin {
         version: auth_protocol::Version,
+        key_agreement: cosey::PublicKey,
         pin_hash_encrypted: &'a [u8],
         new_pin_encrypted: &'a [u8],
         pin_uv_auth_param: &'a [u8],
@@ -33,14 +34,14 @@ pub enum Request<'a> {
     },
     GetPinUvAuthTokenUsingUvWithPermissions {
         version: auth_protocol::Version,
-        key_agreement: &'a coset::CoseKey,
+        key_agreement: cosey::PublicKey,
         permissions: &'a BTreeSet<Permission>, // TODO: Enforce non-empty set?
         relying_party_id: Option<usize>,
     },
     GetUvRetries,
     GetPinUvAuthTokenUsingPinWithPermissions {
         version: auth_protocol::Version,
-        key_agreement: &'a coset::CoseKey,
+        key_agreement: cosey::PublicKey,
         pin_hash_encrypted: usize,
         permissions: &'a BTreeSet<Permission>, // TODO: Enforce non-empty set?
         relying_party_id: Option<usize>,
@@ -58,7 +59,7 @@ pub enum Response {
         power_cycle_state: Option<usize>,
     },
     GetKeyAgreement {
-        key_agreement: coset::CoseKey,
+        key_agreement: cosey::PublicKey,
     },
     SetPin {
         key_agreement: coset::CoseKey,
