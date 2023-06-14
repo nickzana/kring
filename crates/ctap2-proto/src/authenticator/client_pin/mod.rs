@@ -1,5 +1,5 @@
 use bounded_integer::BoundedUsize;
-use std::collections::BTreeSet;
+use std::{borrow::Cow, collections::BTreeSet};
 
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
@@ -36,7 +36,7 @@ pub enum Request<'a> {
         version: auth_protocol::Version,
         key_agreement: cosey::PublicKey,
         permissions: &'a BTreeSet<Permission>, // TODO: Enforce non-empty set?
-        relying_party_id: Option<usize>,
+        relying_party_id: Option<Cow<'a, str>>,
     },
     GetUvRetries,
     GetPinUvAuthTokenUsingPinWithPermissions {
@@ -44,7 +44,7 @@ pub enum Request<'a> {
         key_agreement: cosey::PublicKey,
         pin_hash_encrypted: [u8; 16],
         permissions: &'a BTreeSet<Permission>, // TODO: Enforce non-empty set?
-        relying_party_id: Option<usize>,
+        relying_party_id: Option<Cow<'a, str>>,
     },
 }
 
