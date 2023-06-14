@@ -63,7 +63,9 @@ pub enum Response {
     },
     SetPin,
     ChangePin,
-    GetPinToken,
+    GetPinToken {
+        pin_uv_auth_token: PinUvAuthToken,
+    },
     GetPinUvAuthTokenUsingUvWithPermissions {
         /// > The pinUvAuthToken, encrypted by calling encrypt with the shared
         /// > secret as the key.
