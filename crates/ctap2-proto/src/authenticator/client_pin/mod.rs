@@ -7,6 +7,9 @@ use serde::{Deserialize, Serialize};
 
 pub mod auth_protocol;
 
+#[cfg(feature = "serde")]
+mod raw;
+
 pub type PinUvAuthParam = [u8; 16];
 
 
