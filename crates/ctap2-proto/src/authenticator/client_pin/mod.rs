@@ -105,26 +105,6 @@ pub enum Error {
     UserVerificationInvalid,
 }
 
-impl std::fmt::Display for Error {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Error::MissingParameter => write!(f, "Missing parameter"),
-            Error::InvalidParameter => write!(f, "Invalid parameter"),
-            Error::PinAuthInvalid => write!(f, "PIN auth invalid"),
-            Error::PinPolicyViolation => write!(f, "PIN policy violation"),
-            Error::PinBlocked => write!(f, "PIN blocked"),
-            Error::PinAuthBlocked => write!(f, "PIN auth blocked"),
-            Error::PinInvalid => write!(f, "PIN invalid"),
-            Error::OperationDenied => write!(f, "Operation denied"),
-            Error::UnauthorizedPermission => write!(f, "Unauthorized permission"),
-            Error::NotAllowed => write!(f, "Not allowed"),
-            Error::UserVerificationBlocked => write!(f, "User verification blocked"),
-            Error::UserActionTimeout => write!(f, "User action timeout"),
-            Error::UserVerificationInvalid => write!(f, "User verification invalid"),
-        }
-    }
-}
-
 /// > When obtaining a `pinUvAuthToken`, the platform requests permissions
 /// > appropriate for the operations it intends to perform. Consequently, the
 /// > `pinUvAuthToken` can only be used for those operations.
@@ -153,4 +133,24 @@ pub enum Permission {
     /// > This allows the `pinUvAuthToken` to be used with the
     /// > `authenticatorConfig` command.
     AuthenticatorConfiguration,
+}
+
+impl std::fmt::Display for Error {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Error::MissingParameter => write!(f, "Missing parameter"),
+            Error::InvalidParameter => write!(f, "Invalid parameter"),
+            Error::PinAuthInvalid => write!(f, "PIN auth invalid"),
+            Error::PinPolicyViolation => write!(f, "PIN policy violation"),
+            Error::PinBlocked => write!(f, "PIN blocked"),
+            Error::PinAuthBlocked => write!(f, "PIN auth blocked"),
+            Error::PinInvalid => write!(f, "PIN invalid"),
+            Error::OperationDenied => write!(f, "Operation denied"),
+            Error::UnauthorizedPermission => write!(f, "Unauthorized permission"),
+            Error::NotAllowed => write!(f, "Not allowed"),
+            Error::UserVerificationBlocked => write!(f, "User verification blocked"),
+            Error::UserActionTimeout => write!(f, "User action timeout"),
+            Error::UserVerificationInvalid => write!(f, "User verification invalid"),
+        }
+    }
 }
