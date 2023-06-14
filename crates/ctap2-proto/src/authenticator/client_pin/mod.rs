@@ -1,4 +1,5 @@
 use bounded_integer::BoundedUsize;
+use serde_with::{Bytes, DeserializeAs, SerializeAs};
 use std::{borrow::Cow, collections::BTreeSet};
 
 #[cfg(feature = "serde")]
@@ -8,7 +9,58 @@ pub mod auth_protocol;
 
 pub type PinUvAuthParam = [u8; 16];
 
-#[derive(Clone)]
+
+#[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+pub enum PinUvAuthToken {
+    Short([u8; 16]),
+    Long([u8; 32]),
+}
+
+#[cfg(feature = "serde")]
+impl TryFrom<&[u8]> for PinUvAuthToken {
+    type Error = Error;
+
+    fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
+        match value.len() {
+            16 => {
+                let mut short = [0; 16];
+                short.copy_from_slice(value);
+                Ok(Self::Short(short))
+            }
+            32 => {
+                let mut long = [0; 32];
+                long.copy_from_slice(value);
+                Ok(Self::Long(long))
+            }
+            _ => Err(Error::InvalidParameter),
+        }
+    }
+}
+
+#[cfg(feature = "serde")]
+impl<'de> DeserializeAs<'de, PinUvAuthToken> for Bytes {
+    fn deserialize_as<D>(deserializer: D) -> Result<PinUvAuthToken, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let bytes: Vec<u8> = Bytes::deserialize_as(deserializer)?;
+        PinUvAuthToken::try_from(bytes.as_ref()).map_err(serde::de::Error::custom)
+    }
+}
+
+#[cfg(feature = "serde")]
+impl SerializeAs<PinUvAuthToken> for Bytes {
+    fn serialize_as<S>(source: &PinUvAuthToken, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        match source {
+            PinUvAuthToken::Short(bytes) => Bytes::serialize_as(bytes, serializer),
+            PinUvAuthToken::Long(bytes) => Bytes::serialize_as(bytes, serializer),
+        }
+    }
+}
 pub enum Request<'a> {
     GetPinRetries,
     GetKeyAgreement {
@@ -46,11 +98,6 @@ pub enum Request<'a> {
         permissions: &'a BTreeSet<Permission>, // TODO: Enforce non-empty set?
         relying_party_id: Option<Cow<'a, str>>,
     },
-}
-
-pub enum PinUvAuthToken {
-    Short([u8; 16]),
-    Long([u8; 32]),
 }
 
 pub enum Response {
