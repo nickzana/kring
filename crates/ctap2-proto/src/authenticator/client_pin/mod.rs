@@ -108,7 +108,7 @@ pub enum Error {
 /// > When obtaining a `pinUvAuthToken`, the platform requests permissions
 /// > appropriate for the operations it intends to perform. Consequently, the
 /// > `pinUvAuthToken` can only be used for those operations.
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Permission {
     /// > This allows the `pinUvAuthToken` to be used for
     /// > `authenticatorMakeCredential` operations with the provided `rpId`
