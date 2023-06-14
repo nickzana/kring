@@ -15,6 +15,7 @@ pub enum Request<'a> {
         version: auth_protocol::Version,
     },
     SetPin {
+        version: auth_protocol::Version,
         key_agreement: &'a coset::CoseKey,
         new_pin_encrypted: &'a [u8],
         pin_uv_auth_param: &'a [u8],
