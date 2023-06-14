@@ -17,20 +17,20 @@ pub enum Request<'a> {
     SetPin {
         version: auth_protocol::Version,
         key_agreement: cosey::PublicKey,
-        new_pin_encrypted: &'a [u8],
-        pin_uv_auth_param: &'a [u8],
+        new_pin_encrypted: [u8; 64],
+        pin_uv_auth_param: PinUvAuthParam,
     },
     ChangePin {
         version: auth_protocol::Version,
         key_agreement: cosey::PublicKey,
-        pin_hash_encrypted: &'a [u8],
-        new_pin_encrypted: &'a [u8],
-        pin_uv_auth_param: &'a [u8],
+        pin_hash_encrypted: [u8; 16],
+        new_pin_encrypted: [u8; 64],
+        pin_uv_auth_param: PinUvAuthParam,
     },
     GetPinToken {
         version: auth_protocol::Version,
         key_agreement: cosey::PublicKey,
-        pin_hash_encrypted: &'a [u8],
+        pin_hash_encrypted: [u8; 16],
     },
     GetPinUvAuthTokenUsingUvWithPermissions {
         version: auth_protocol::Version,
@@ -42,7 +42,7 @@ pub enum Request<'a> {
     GetPinUvAuthTokenUsingPinWithPermissions {
         version: auth_protocol::Version,
         key_agreement: cosey::PublicKey,
-        pin_hash_encrypted: usize,
+        pin_hash_encrypted: [u8; 16],
         permissions: &'a BTreeSet<Permission>, // TODO: Enforce non-empty set?
         relying_party_id: Option<usize>,
     },
