@@ -3,6 +3,9 @@ use fido_common::credential::public_key;
 
 pub type PinUvAuthParam = [u8; 16];
 
+#[cfg(feature = "serde")]
+mod raw;
+
 #[derive(Clone, Copy)]
 pub enum Request<'a> {
     GetCredentialsMetadata {
@@ -105,4 +108,18 @@ pub enum Error {
     PinAuthInvalid,
     NoCredentials,
     KeyStoreFull,
+}
+
+impl Display for Error {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let message = match self {
+            Error::PinUvAuthTokenRequired => "PIN/UV auth token required",
+            Error::MissingParameter => "Missing parameter",
+            Error::InvalidParameter => "Invalid parameter",
+            Error::PinAuthInvalid => "PIN auth invalid",
+            Error::NoCredentials => "No credentials",
+            Error::KeyStoreFull => "Key store full",
+        };
+        write!(f, "{}", message)
+    }
 }
