@@ -1,7 +1,9 @@
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+use std::marker::ConstParamTy;
+
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug, ConstParamTy)]
 #[cfg_attr(
     feature = "serde",
     derive(Serialize, Deserialize),

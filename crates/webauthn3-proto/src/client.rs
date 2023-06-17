@@ -1,10 +1,11 @@
 use crate::token;
+use std::marker::ConstParamTy;
 
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(PartialEq, Eq, Clone, Copy)]
+#[derive(PartialEq, Eq, Clone, Copy, ConstParamTy)]
 pub enum DataType {
     #[cfg_attr(feature = "serde", serde(rename = "webauthn.create"))]
     Create,
