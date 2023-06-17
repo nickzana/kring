@@ -1,5 +1,7 @@
 use crate::{authenticator::client_pin, extensions::cred_protect, Sha256Hash};
 use fido_common::credential::public_key;
+use std::fmt::Display;
+
 
 pub type PinUvAuthParam = [u8; 16];
 
