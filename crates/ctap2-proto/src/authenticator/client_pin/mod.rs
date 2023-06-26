@@ -15,12 +15,20 @@ use raw::{RawRequest, RawResponse};
 
 pub type PinUvAuthParam = [u8; 16];
 
-
 #[derive(Clone, Copy, Debug)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum PinUvAuthToken {
     Short([u8; 16]),
     Long([u8; 32]),
+}
+
+impl AsRef<[u8]> for PinUvAuthToken {
+    fn as_ref(&self) -> &[u8] {
+        match self {
+            PinUvAuthToken::Short(bytes) => bytes.as_ref(),
+            PinUvAuthToken::Long(bytes) => bytes.as_ref(),
+        }
+    }
 }
 
 #[cfg(feature = "serde")]
