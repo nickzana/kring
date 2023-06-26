@@ -86,5 +86,5 @@ pub enum Command {
     AuthenticatorLargeBlobs = 0x0C,
     AuthenticatorConfig = 0x0D,
     PrototypeAuthenticatorBioEnrollment = 0x40,
-    PrototypeAuthenticatorCredentialmanagement = 0x41,
+    PrototypeAuthenticatorCredentialManagement = 0x41,
 }
